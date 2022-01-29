@@ -1,9 +1,8 @@
 import 'dart:async';
 
-import 'package:authentication_repository/authentication_repository.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:user_repository/user_repository.dart';
+import 'package:wod_generator_repository/wod_generator_repository.dart';
 
 part 'authentication_event.dart';
 part 'authentication_state.dart';
@@ -11,27 +10,25 @@ part 'authentication_state.dart';
 class AuthenticationBloc
     extends Bloc<AuthenticationEvent, AuthenticationState> {
   AuthenticationBloc({
-    required AuthenticationRepository authenticationRepository,
-    required UserRepository userRepository,
-  })  : _authenticationRepository = authenticationRepository,
-        _userRepository = userRepository,
+    required WodGeneratorRepository wodGeneratorRepository,
+  })  : _wodGeneratorRepository = wodGeneratorRepository,
         super(const AuthenticationState.unknown()) {
     on<AuthenticationStatusChanged>(_onAuthenticationStatusChanged);
     on<AuthenticationLogoutRequested>(_onAuthenticationLogoutRequested);
-    _authenticationStatusSubscription = _authenticationRepository.status.listen(
+    _authenticationStatusSubscription = _wodGeneratorRepository.status.listen(
       (status) => add(AuthenticationStatusChanged(status)),
     );
+    on<AuthenticationUncacheLastSession>(_onAuthenticationUncacheLastSession);
   }
 
-  final AuthenticationRepository _authenticationRepository;
-  final UserRepository _userRepository;
+  final WodGeneratorRepository _wodGeneratorRepository;
   late StreamSubscription<AuthenticationStatus>
       _authenticationStatusSubscription;
 
   @override
   Future<void> close() {
     _authenticationStatusSubscription.cancel();
-    _authenticationRepository.dispose();
+    _wodGeneratorRepository.dispose();
     return super.close();
   }
 
@@ -56,15 +53,22 @@ class AuthenticationBloc
     AuthenticationLogoutRequested event,
     Emitter<AuthenticationState> emit,
   ) {
-    _authenticationRepository.logOut();
+    _wodGeneratorRepository.logOut();
   }
 
   Future<User?> _tryGetUser() async {
     try {
-      final user = await _userRepository.getUser();
+      final user = await _wodGeneratorRepository.getUser();
       return user;
     } catch (_) {
       return null;
     }
+  }
+
+  void _onAuthenticationUncacheLastSession(
+    AuthenticationUncacheLastSession event,
+    Emitter<AuthenticationState> emit,
+  ) async {
+    await _wodGeneratorRepository.getCachedToken();
   }
 }

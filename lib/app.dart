@@ -1,31 +1,27 @@
-import 'package:authentication_repository/authentication_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:user_repository/user_repository.dart';
 import 'package:wod_generator/home/view/home_page.dart';
 import 'package:wod_generator/sign_in/view/sign_in_page.dart';
 import 'package:wod_generator/splash/view/splash_page.dart';
+import 'package:wod_generator_repository/wod_generator_repository.dart';
 
 import 'authentication/bloc/authentication_bloc.dart';
 
 class App extends StatelessWidget {
   const App({
     Key? key,
-    required this.authenticationRepository,
-    required this.userRepository,
+    required this.wodGeneratorRepository,
   }) : super(key: key);
 
-  final AuthenticationRepository authenticationRepository;
-  final UserRepository userRepository;
+  final WodGeneratorRepository wodGeneratorRepository;
 
   @override
   Widget build(BuildContext context) {
     return RepositoryProvider.value(
-      value: authenticationRepository,
+      value: wodGeneratorRepository,
       child: BlocProvider(
         create: (_) => AuthenticationBloc(
-          authenticationRepository: authenticationRepository,
-          userRepository: userRepository,
+          wodGeneratorRepository: wodGeneratorRepository,
         ),
         child: const AppView(),
       ),

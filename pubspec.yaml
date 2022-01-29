@@ -38,10 +38,8 @@ dependencies:
   flutter_bloc: ^8.0.1
   equatable: ^2.0.3
   formz: ^0.4.0
-  authentication_repository:
-    path: packages/authentication_repository
-  user_repository:
-    path: packages/user_repository
+  wod_generator_repository:
+    path: packages/wod_generator_repository
 
 dev_dependencies:
   flutter_test:

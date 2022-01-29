@@ -9,8 +9,6 @@ class WorkoutManagerApiClient {
 
   final Client _client;
 
-  late var _token;
-
   Future<String> login(String username, String password) async {
     final res = await _client.post(
       Uri.parse('${_baseUrl}login/'),
@@ -21,15 +19,14 @@ class WorkoutManagerApiClient {
     );
     final decodedRes = jsonDecode(utf8.decode(res.bodyBytes)) as Map;
     var token = decodedRes['token'];
-    _token = token;
     return token;
   }
 
-  Future<Page<User>> getUser() async {
+  Future<Page<User>> getUser({required String token}) async {
     final res = await _client.get(
       Uri.parse('${_baseUrl}userprofile/'),
       headers: {
-        'Authorization': 'Token ${_token}',
+        'Authorization': 'Token ${token}',
       },
     );
     final decodedRes = jsonDecode(res.body);

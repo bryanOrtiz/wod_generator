@@ -1,8 +1,8 @@
-import 'package:authentication_repository/authentication_repository.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
 import 'package:wod_generator/sign_in/models/models.dart';
+import 'package:wod_generator_repository/wod_generator_repository.dart';
 
 abstract class SignInEvent extends Equatable {
   const SignInEvent();
@@ -61,15 +61,15 @@ class SignInState extends Equatable {
 }
 
 class SignInBloc extends Bloc<SignInEvent, SignInState> {
-  SignInBloc({required AuthenticationRepository authenticationRepository})
-      : _authenticationRepository = authenticationRepository,
+  SignInBloc({required WodGeneratorRepository wodGeneratorRepository})
+      : _wodGeneratorRepository = wodGeneratorRepository,
         super(const SignInState()) {
     on<SignInEmailChanged>(_onUsernameChanged);
     on<SignInPasswordChanged>(_onPasswordChanged);
     on<SignInSubmitted>(_onSubmitted);
   }
 
-  final AuthenticationRepository _authenticationRepository;
+  final WodGeneratorRepository _wodGeneratorRepository;
 
   void _onUsernameChanged(
     SignInEmailChanged event,
@@ -108,7 +108,7 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
     if (state.status.isValidated) {
       emit(state.copyWith(status: FormzStatus.submissionInProgress));
       try {
-        await _authenticationRepository.login(
+        await _wodGeneratorRepository.login(
           email: state.email.value,
           password: state.password.value,
         );
