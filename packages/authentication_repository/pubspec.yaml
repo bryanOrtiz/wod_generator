@@ -1,0 +1,11 @@
+name: authentication_repository
+description: A new Flutter package project.
+version: 0.0.1
+publish_to: none
+
+environment:
+  sdk: ">=2.15.1 <3.0.0"
+  
+dependencies:
+  workout_manager_api:
+    path: ../workout_manager_api
