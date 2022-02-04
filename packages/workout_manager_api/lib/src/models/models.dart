@@ -8,3 +8,5 @@ export 'set.dart';
 export 'setting_repition_unit.dart';
 export 'setting_weight_unit.dart';
 export 'setting.dart';
+export 'search_exercise.dart';
+export 'suggestions.dart';

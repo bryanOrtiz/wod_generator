@@ -147,4 +147,21 @@ class WorkoutManagerApiClient {
     final decodedRes = jsonDecode(res.body);
     return Setting.fromJson(decodedRes);
   }
+
+  Future<Suggestions<SearchExercise>> searchExerciseByTerm({
+    required String token,
+    required String term,
+  }) async {
+    final res = await _client.get(
+      Uri.parse('${_baseUrl}exercise/search/?term=${term}'),
+      headers: {
+        'Authorization': 'Token ${token}',
+      },
+    );
+    final decodedRes = jsonDecode(res.body);
+    return Suggestions<SearchExercise>.fromJson(
+      decodedRes,
+      (data) => SearchExercise.fromJson(data as Map<String, dynamic>),
+    );
+  }
 }

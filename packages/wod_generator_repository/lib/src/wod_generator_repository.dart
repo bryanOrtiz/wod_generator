@@ -1,6 +1,7 @@
 import 'dart:async';
 
-import 'package:workout_manager_api/workout_manager_api.dart' hide User;
+import 'package:workout_manager_api/workout_manager_api.dart'
+    hide User, SearchExercise;
 
 import 'models/models.dart';
 
@@ -73,4 +74,35 @@ class WodGeneratorRepository {
   }
 
   void dispose() => _controller.close();
+
+  Future<List<SearchExercise>> searchExerciseByTerm({
+    required String term,
+  }) async {
+    final exercise = await _workoutManagerApiClient.searchExerciseByTerm(
+      token: _token,
+      term: term,
+    );
+    return exercise.suggestions
+            ?.map(
+              (suggestionItem) => SearchExercise(
+                  id: suggestionItem.data.id,
+                  name: suggestionItem.data.name,
+                  category: suggestionItem.data.category,
+                  image: suggestionItem.data.image,
+                  imageThumbnail: suggestionItem.data.imageThumbnail),
+            )
+            .toList() ??
+        [];
+  }
+
+  Future<void> createWorkout({
+    required String email,
+    required String password,
+  }) async {
+    final token = await _workoutManagerApiClient.login(email, password);
+    _token = token;
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString(kToken, _token);
+    _controller.add(AuthenticationStatus.authenticated);
+  }
 }
