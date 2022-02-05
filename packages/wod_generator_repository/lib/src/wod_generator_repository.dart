@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:workout_manager_api/workout_manager_api.dart'
-    hide User, SearchExercise;
+    hide User, SearchExercise, SettingWeightUnit;
 
 import 'models/models.dart';
 
@@ -104,5 +104,18 @@ class WodGeneratorRepository {
     final prefs = await SharedPreferences.getInstance();
     prefs.setString(kToken, _token);
     _controller.add(AuthenticationStatus.authenticated);
+  }
+
+  Future<List<WeightUnit>> getWeightUnits() async {
+    final weightUnits =
+        await _workoutManagerApiClient.getSettingWeightUnits(token: _token);
+    return weightUnits.results
+        .map(
+          (settingWeightUnit) => WeightUnit(
+            id: settingWeightUnit.id,
+            name: settingWeightUnit.name,
+          ),
+        )
+        .toList();
   }
 }
