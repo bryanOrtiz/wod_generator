@@ -10,8 +10,11 @@ class ExerciseBloc extends Bloc<ExerciseEvent, ExerciseState> {
   ExerciseBloc({required WodGeneratorRepository wodGeneratorRepository})
       : _wodGeneratorRepository = wodGeneratorRepository,
         super(const ExerciseState()) {
+    on<ExerciseStepChanged>(_onStepChanged);
     on<ExerciseSearchTermChanged>(_onSearchTermChanged);
     on<ExerciseSearchSelected>(_onSelectedExercise);
+    on<ExerciseNumberOfSetsChanged>(_onNumberOfSetsChanged);
+    on<ExerciseGetInitialData>(_onGetInitialData);
   }
 
   final WodGeneratorRepository _wodGeneratorRepository;
@@ -39,6 +42,42 @@ class ExerciseBloc extends Bloc<ExerciseEvent, ExerciseState> {
     emit(
       state.copyWith(
         selectedExercise: event.searchExercise,
+      ),
+    );
+  }
+
+  void _onNumberOfSetsChanged(
+    ExerciseNumberOfSetsChanged event,
+    Emitter<ExerciseState> emit,
+  ) {
+    final numOfSets = int.parse(event.numberOfSets);
+    print('numOfSets: $numOfSets');
+    emit(
+      state.copyWith(
+        numberOfSets: numOfSets, //int.parse(event.numberOfSets),
+      ),
+    );
+  }
+
+  Future<void> _onGetInitialData(
+    ExerciseGetInitialData event,
+    Emitter<ExerciseState> emit,
+  ) async {
+    final weightUnits = await _wodGeneratorRepository.getWeightUnits();
+    emit(
+      state.copyWith(
+        weightUnits: weightUnits,
+      ),
+    );
+  }
+
+  Future<void> _onStepChanged(
+    ExerciseStepChanged event,
+    Emitter<ExerciseState> emit,
+  ) async {
+    emit(
+      state.copyWith(
+        step: event.step,
       ),
     );
   }

@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wod_generator/authentication/bloc/authentication_bloc.dart';
-import 'package:wod_generator/exercises/bloc/exercise_bloc.dart';
-import 'package:wod_generator/exercises/exercise.dart';
 import 'package:wod_generator/home/view/empty_home.dart';
-import 'package:wod_generator_repository/wod_generator_repository.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);

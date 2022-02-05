@@ -16,6 +16,19 @@ class ExerciseSearchTermChanged extends ExerciseEvent {
   List<Object> get props => [term];
 }
 
+class ExerciseStepChanged extends ExerciseEvent {
+  const ExerciseStepChanged(this.step);
+
+  final int step;
+
+  @override
+  List<Object> get props => [step];
+}
+
+class ExerciseGetInitialData extends ExerciseEvent {
+  const ExerciseGetInitialData();
+}
+
 class ExerciseSearchSelected extends ExerciseEvent {
   const ExerciseSearchSelected(this.searchExercise);
 
@@ -23,4 +36,13 @@ class ExerciseSearchSelected extends ExerciseEvent {
 
   @override
   List<Object> get props => [searchExercise];
+}
+
+class ExerciseNumberOfSetsChanged extends ExerciseEvent {
+  const ExerciseNumberOfSetsChanged(this.numberOfSets);
+
+  final String numberOfSets;
+
+  @override
+  List<Object> get props => [numberOfSets];
 }

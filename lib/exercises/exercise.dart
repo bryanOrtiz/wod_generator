@@ -1,1 +1,1 @@
-export 'view/exercises_list.dart';
+export 'view/create_exercise_page.dart';

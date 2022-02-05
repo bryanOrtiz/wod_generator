@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:wod_generator/exercises/bloc/exercise_bloc.dart';
-import 'package:wod_generator/exercises/view/exercises_list.dart';
-import 'package:wod_generator_repository/wod_generator_repository.dart';
+import 'package:wod_generator/exercises/view/create_exercise_page.dart';
 
 class EmptyHome extends StatelessWidget {
   const EmptyHome({Key? key}) : super(key: key);
@@ -28,7 +25,7 @@ class EmptyHome extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const SearchExercises(),
+                    builder: (context) => const CreateExercisePage(),
                   ),
                 );
               },
