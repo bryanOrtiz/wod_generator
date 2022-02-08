@@ -46,3 +46,12 @@ class ExerciseNumberOfSetsChanged extends ExerciseEvent {
   @override
   List<Object> get props => [numberOfSets];
 }
+
+class ExerciseSelectedWeightUnitChanged extends ExerciseEvent {
+  const ExerciseSelectedWeightUnitChanged(this.weightUnit);
+
+  final String weightUnit;
+
+  @override
+  List<Object> get props => [weightUnit];
+}

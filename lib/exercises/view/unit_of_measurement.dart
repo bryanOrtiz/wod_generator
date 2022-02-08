@@ -11,14 +11,19 @@ class UnitOfMeasurement extends StatelessWidget {
     return BlocBuilder<ExerciseBloc, ExerciseState>(
       builder: (context, state) {
         return DropdownButtonFormField<String>(
+          value: state.selectedWeightUnit.name,
           items: state.weightUnits
               .map((unit) => DropdownMenuItem<String>(
                     child: Text(unit.name),
                     value: unit.name,
                   ))
               .toList(),
-          onChanged: (value) {
-            print(value);
+          onChanged: (selectedWeightUnit) {
+            if (selectedWeightUnit != null) {
+              context
+                  .read<ExerciseBloc>()
+                  .add(ExerciseSelectedWeightUnitChanged(selectedWeightUnit));
+            } else {}
           },
         );
       },

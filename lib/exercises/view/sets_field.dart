@@ -12,6 +12,7 @@ class SetsField extends StatelessWidget {
           previous.numberOfSets != current.numberOfSets,
       builder: (context, state) {
         return TextFormField(
+          initialValue: state.numberOfSets.toString(),
           decoration: const InputDecoration(
             labelText: 'Number of Sets',
           ),

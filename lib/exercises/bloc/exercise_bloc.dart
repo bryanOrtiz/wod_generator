@@ -15,6 +15,7 @@ class ExerciseBloc extends Bloc<ExerciseEvent, ExerciseState> {
     on<ExerciseSearchSelected>(_onSelectedExercise);
     on<ExerciseNumberOfSetsChanged>(_onNumberOfSetsChanged);
     on<ExerciseGetInitialData>(_onGetInitialData);
+    on<ExerciseSelectedWeightUnitChanged>(_onSelectedWeightUnitChanged);
   }
 
   final WodGeneratorRepository _wodGeneratorRepository;
@@ -67,6 +68,8 @@ class ExerciseBloc extends Bloc<ExerciseEvent, ExerciseState> {
     emit(
       state.copyWith(
         weightUnits: weightUnits,
+        selectedWeightUnit:
+            weightUnits.firstWhere((element) => element.name.contains('lb')),
       ),
     );
   }
@@ -78,6 +81,19 @@ class ExerciseBloc extends Bloc<ExerciseEvent, ExerciseState> {
     emit(
       state.copyWith(
         step: event.step,
+      ),
+    );
+  }
+
+  Future<void> _onSelectedWeightUnitChanged(
+    ExerciseSelectedWeightUnitChanged event,
+    Emitter<ExerciseState> emit,
+  ) async {
+    final weightUnit =
+        state.weightUnits.firstWhere((unit) => unit.name == event.weightUnit);
+    emit(
+      state.copyWith(
+        selectedWeightUnit: weightUnit,
       ),
     );
   }
