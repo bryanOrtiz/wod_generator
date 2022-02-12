@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:wod_generator/exercises/bloc/exercise_bloc.dart';
+import 'package:wod_generator/create_workout_part/bloc/create_workout_part_bloc.dart';
+import 'package:wod_generator_repository/wod_generator_repository.dart';
+import '../models/models.dart';
 
 class RepsPerSet extends StatelessWidget {
   const RepsPerSet({Key? key}) : super(key: key);
@@ -9,7 +11,9 @@ class RepsPerSet extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       child: InkWell(
-        child: BlocBuilder<ExerciseBloc, ExerciseState>(
+        child: BlocBuilder<CreateWorkoutPartBloc, CreateWorkoutPartState>(
+          buildWhen: (previous, current) =>
+              previous.part.sets != current.part.sets,
           builder: (context, state) {
             return ListTile(
               title: Text(
@@ -17,7 +21,7 @@ class RepsPerSet extends StatelessWidget {
                 style: Theme.of(context).textTheme.caption,
               ),
               subtitle: Text(
-                '1x1',
+                state.part.description(),
                 style: Theme.of(context).textTheme.bodyText1,
               ),
               trailing: const Icon(Icons.unfold_more),
@@ -25,7 +29,8 @@ class RepsPerSet extends StatelessWidget {
           },
         ),
         onTap: () {
-          final exerciseBlocProvider = BlocProvider.of<ExerciseBloc>(context);
+          final exerciseBlocProvider =
+              BlocProvider.of<CreateWorkoutPartBloc>(context);
           showModalBottomSheet(
             context: context,
             builder: (context) {
@@ -36,11 +41,20 @@ class RepsPerSet extends StatelessWidget {
       ),
     );
   }
+
+  String _generateText(List<WorkoutSet> state) {
+    var retVal = '';
+    state.asMap().forEach((index, value) {
+      final newLine = index == state.length - 1 ? '' : '\n';
+      retVal += '1 x ${value.reps}' + newLine;
+    });
+    return retVal;
+  }
 }
 
 class _BottomSheet extends StatelessWidget {
   const _BottomSheet({Key? key, required this.bloc}) : super(key: key);
-  final ExerciseBloc bloc;
+  final CreateWorkoutPartBloc bloc;
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +73,10 @@ class _BottomSheet extends StatelessWidget {
             ),
             _NumberOfRepsRows(),
             ElevatedButton(
-              onPressed: () => Navigator.of(context).pop(),
+              onPressed: () {
+                bloc.add(const CreateWorkoutPartRepForSetConfirmed());
+                Navigator.of(context).pop();
+              },
               child: const Text('Submit'),
             ),
           ],
@@ -72,13 +89,12 @@ class _BottomSheet extends StatelessWidget {
 class _NumberOfRepsRows extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ExerciseBloc, ExerciseState>(
-      buildWhen: (previous, current) =>
-          previous.numberOfSets != current.numberOfSets,
+    return BlocBuilder<CreateWorkoutPartBloc, CreateWorkoutPartState>(
+      buildWhen: (previous, current) => previous.sets != current.sets,
       builder: (context, state) {
         return Expanded(
           child: ListView.builder(
-            itemCount: state.numberOfSets,
+            itemCount: state.sets.length,
             itemBuilder: (context, index) {
               return Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -86,11 +102,19 @@ class _NumberOfRepsRows extends StatelessWidget {
                   children: [
                     Expanded(
                       child: TextFormField(
+                        initialValue: state.part.sets[index].reps.toString(),
                         decoration: InputDecoration(
                           label: Text('Set ${index + 1}'),
                         ),
                         keyboardType: TextInputType.number,
-                        onChanged: (reps) => print(reps),
+                        onChanged: (reps) {
+                          context.read<CreateWorkoutPartBloc>().add(
+                                CreateWorkoutPartRepForSetChanged(
+                                  index,
+                                  reps,
+                                ),
+                              );
+                        },
                       ),
                     ),
                   ],

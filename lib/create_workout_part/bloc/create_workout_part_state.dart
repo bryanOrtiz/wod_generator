@@ -1,41 +1,49 @@
-part of 'exercise_bloc.dart';
+part of 'create_workout_part_bloc.dart';
 
-class ExerciseState extends Equatable {
-  const ExerciseState({
+class CreateWorkoutPartState extends Equatable {
+  const CreateWorkoutPartState({
     this.step = 0,
     this.searchTerm = const SearchTerm.pure(),
     this.exercises = const [],
     this.selectedExercise,
-    this.numberOfSets = 1,
+    this.sets = const [WorkoutSet(reps: 1)],
     this.weightUnits = const [],
     this.selectedWeightUnit = const WeightUnit(id: 1, name: 'lb'),
+    this.comment = '',
+    this.part = const CreateWorkoutPart.initial(),
   });
 
   final int step;
   final SearchTerm searchTerm;
   final List<SearchExercise> exercises;
   final SearchExercise? selectedExercise;
-  final int numberOfSets;
+  final List<WorkoutSet> sets;
   final List<WeightUnit> weightUnits;
   final WeightUnit selectedWeightUnit;
+  final String comment;
+  final CreateWorkoutPart part;
 
-  ExerciseState copyWith({
+  CreateWorkoutPartState copyWith({
     int? step,
     SearchTerm? searchTerm,
     List<SearchExercise>? exercises,
     SearchExercise? selectedExercise,
-    int? numberOfSets,
+    List<WorkoutSet>? sets,
     List<WeightUnit>? weightUnits,
     WeightUnit? selectedWeightUnit,
+    String? comment,
+    CreateWorkoutPart? part,
   }) {
-    return ExerciseState(
+    return CreateWorkoutPartState(
       step: step ?? this.step,
       searchTerm: searchTerm ?? this.searchTerm,
       exercises: exercises ?? this.exercises,
       selectedExercise: selectedExercise ?? this.selectedExercise,
-      numberOfSets: numberOfSets ?? this.numberOfSets,
+      sets: sets ?? this.sets,
       weightUnits: weightUnits ?? this.weightUnits,
       selectedWeightUnit: selectedWeightUnit ?? this.selectedWeightUnit,
+      comment: comment ?? this.comment,
+      part: part ?? this.part,
     );
   }
 
@@ -45,8 +53,10 @@ class ExerciseState extends Equatable {
         searchTerm,
         exercises,
         selectedExercise,
-        numberOfSets,
+        sets,
         weightUnits,
         selectedWeightUnit,
+        comment,
+        part,
       ];
 }

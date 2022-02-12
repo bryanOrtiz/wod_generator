@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:wod_generator/exercises/bloc/exercise_bloc.dart';
+import 'package:wod_generator/create_workout_part/bloc/create_workout_part_bloc.dart';
 
 class FindExerciseList extends StatelessWidget {
   const FindExerciseList({Key? key}) : super(key: key);
@@ -9,9 +9,9 @@ class FindExerciseList extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       child: InkWell(
-        child: BlocBuilder<ExerciseBloc, ExerciseState>(
+        child: BlocBuilder<CreateWorkoutPartBloc, CreateWorkoutPartState>(
             buildWhen: (previous, current) =>
-                previous.selectedExercise != current.selectedExercise,
+                previous.part.exercise != current.part.exercise,
             builder: (context, state) {
               return ListTile(
                 title: Text(
@@ -19,8 +19,8 @@ class FindExerciseList extends StatelessWidget {
                   style: Theme.of(context).textTheme.caption,
                 ),
                 subtitle: Text(
-                  state.selectedExercise != null
-                      ? state.selectedExercise!.name
+                  state.part.exercise != null
+                      ? state.part.exercise!.name
                       : 'Click here to find exercise',
                   style: Theme.of(context).textTheme.bodyText1,
                 ),
@@ -28,7 +28,8 @@ class FindExerciseList extends StatelessWidget {
               );
             }),
         onTap: () {
-          final exerciseBlocProvider = BlocProvider.of<ExerciseBloc>(context);
+          final exerciseBlocProvider =
+              BlocProvider.of<CreateWorkoutPartBloc>(context);
           showModalBottomSheet(
             context: context,
             builder: (context) => _BottomSheet(bloc: exerciseBlocProvider),
@@ -41,7 +42,7 @@ class FindExerciseList extends StatelessWidget {
 
 class _BottomSheet extends StatelessWidget {
   const _BottomSheet({Key? key, required this.bloc}) : super(key: key);
-  final ExerciseBloc bloc;
+  final CreateWorkoutPartBloc bloc;
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +54,10 @@ class _BottomSheet extends StatelessWidget {
             _SearchField(),
             _ExercisesListView(),
             ElevatedButton(
-              onPressed: () => Navigator.of(context).pop(),
+              onPressed: () {
+                bloc.add(const CreateWorkoutPartExerciseConfirmed());
+                Navigator.of(context).pop();
+              },
               child: const Text('Submit'),
             ),
           ],
@@ -66,7 +70,7 @@ class _BottomSheet extends StatelessWidget {
 class _SearchField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ExerciseBloc, ExerciseState>(
+    return BlocBuilder<CreateWorkoutPartBloc, CreateWorkoutPartState>(
       buildWhen: (previous, current) =>
           previous.searchTerm != current.searchTerm,
       builder: (context, state) {
@@ -75,8 +79,8 @@ class _SearchField extends StatelessWidget {
             icon: Icon(Icons.search),
             labelText: 'Search',
           ),
-          onChanged: (searchTerm) => context.read<ExerciseBloc>().add(
-                ExerciseSearchTermChanged(searchTerm),
+          onChanged: (searchTerm) => context.read<CreateWorkoutPartBloc>().add(
+                CreateWorkoutPartSearchTermChanged(searchTerm),
               ),
         );
       },
@@ -87,7 +91,7 @@ class _SearchField extends StatelessWidget {
 class _ExercisesListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ExerciseBloc, ExerciseState>(
+    return BlocBuilder<CreateWorkoutPartBloc, CreateWorkoutPartState>(
       buildWhen: (previous, current) =>
           previous.exercises != current.exercises ||
           previous.selectedExercise != current.selectedExercise,
@@ -97,8 +101,8 @@ class _ExercisesListView extends StatelessWidget {
             itemCount: state.exercises.length,
             itemBuilder: (context, index) => ListTile(
               title: Text(state.exercises[index].name),
-              onTap: () => context.read<ExerciseBloc>().add(
-                    ExerciseSearchSelected(
+              onTap: () => context.read<CreateWorkoutPartBloc>().add(
+                    CreateWorkoutPartSearchSelected(
                       state.exercises[index],
                     ),
                   ),
