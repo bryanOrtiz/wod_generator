@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:wod_generator/exercises/view/create_exercise_page.dart';
+import 'package:wod_generator/create_workout/view/create_workout_page.dart';
 
 class EmptyHome extends StatelessWidget {
   const EmptyHome({Key? key}) : super(key: key);
@@ -24,9 +24,7 @@ class EmptyHome extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
-                    builder: (context) => const CreateExercisePage(),
-                  ),
+                  CreateWorkoutPage.route(),
                 );
               },
               child: const Text('Build WOD'))
