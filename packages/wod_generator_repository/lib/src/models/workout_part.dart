@@ -14,11 +14,19 @@ class WorkoutPart extends Equatable {
     required this.comment,
   });
 
+  const WorkoutPart.initial({
+    this.id,
+    this.exercise,
+    this.weightUnit = 1,
+    this.sets = const [WorkoutSet(reps: 1)],
+    this.comment = '',
+  });
+
   factory WorkoutPart.fromJson(Map<String, dynamic> json) =>
       _$WorkoutPartFromJson(json);
 
-  final int id;
-  final SearchExercise exercise;
+  final int? id;
+  final SearchExercise? exercise;
   final int weightUnit;
   final List<WorkoutSet> sets;
   final String comment;
@@ -46,4 +54,15 @@ class WorkoutPart extends Equatable {
         sets,
         comment,
       ];
+}
+
+extension CreateWorkoutDescription on WorkoutPart {
+  String description() {
+    var retVal = '';
+    sets.asMap().forEach((index, value) {
+      final newLine = index == sets.length - 1 ? '' : '\n';
+      retVal += '1 x ${value.reps}' + newLine;
+    });
+    return retVal;
+  }
 }

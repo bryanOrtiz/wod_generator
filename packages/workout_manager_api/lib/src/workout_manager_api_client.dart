@@ -50,13 +50,13 @@ class WorkoutManagerApiClient {
     );
   }
 
-  Future<Page<Workout>> createWorkout({
+  Future<Workout> createWorkout({
     required String token,
     required String name,
     required String description,
   }) async {
     final res = await _client.post(
-      Uri.parse('${_baseUrl}workout'),
+      Uri.parse('${_baseUrl}workout/'),
       headers: {
         'Authorization': 'Token ${token}',
       },
@@ -66,10 +66,7 @@ class WorkoutManagerApiClient {
       },
     );
     final decodedRes = jsonDecode(res.body);
-    return Page<Workout>.fromJson(
-      decodedRes,
-      (data) => Workout.fromJson(data as Map<String, dynamic>),
-    );
+    return Workout.fromJson(decodedRes as Map<String, dynamic>);
   }
 
   Future<Page<DaysOfTheWeek>> getDaysOfTheWeek({
@@ -88,14 +85,33 @@ class WorkoutManagerApiClient {
     );
   }
 
-  Future<Set> createSet({
+  Future<Day> createDay({
     required String token,
+    required Day day,
   }) async {
     final res = await _client.post(
-      Uri.parse('${_baseUrl}set'),
+      Uri.parse('${_baseUrl}day/'),
       headers: {
         'Authorization': 'Token ${token}',
+        'Content-Type': 'application/json',
       },
+      body: jsonEncode(day.toJson()),
+    );
+    final decodedRes = jsonDecode(res.body);
+    return Day.fromJson(decodedRes);
+  }
+
+  Future<Set> createSet({
+    required String token,
+    required Set set,
+  }) async {
+    final res = await post(
+      Uri.parse('${_baseUrl}set/'),
+      headers: {
+        'Authorization': 'Token ${token}',
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode(set.toJson()),
     );
     final decodedRes = jsonDecode(res.body);
     return Set.fromJson(decodedRes);
@@ -137,12 +153,13 @@ class WorkoutManagerApiClient {
     required String token,
     required Setting setting,
   }) async {
-    final res = await _client.post(
-      Uri.parse('${_baseUrl}set'),
+    final res = await post(
+      Uri.parse('${_baseUrl}set/'),
       headers: {
         'Authorization': 'Token ${token}',
+        'Content-Type': 'application/json',
       },
-      body: setting.toJson(),
+      body: jsonEncode(setting.toJson()),
     );
     final decodedRes = jsonDecode(res.body);
     return Setting.fromJson(decodedRes);

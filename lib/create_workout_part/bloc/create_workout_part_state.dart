@@ -10,7 +10,7 @@ class CreateWorkoutPartState extends Equatable {
     this.weightUnits = const [],
     this.selectedWeightUnit = const WeightUnit(id: 1, name: 'lb'),
     this.comment = '',
-    this.part = const CreateWorkoutPart.initial(),
+    this.part = const WorkoutPart.initial(),
   });
 
   final int step;
@@ -21,7 +21,7 @@ class CreateWorkoutPartState extends Equatable {
   final List<WeightUnit> weightUnits;
   final WeightUnit selectedWeightUnit;
   final String comment;
-  final CreateWorkoutPart part;
+  final WorkoutPart part;
 
   CreateWorkoutPartState copyWith({
     int? step,
@@ -32,7 +32,7 @@ class CreateWorkoutPartState extends Equatable {
     List<WeightUnit>? weightUnits,
     WeightUnit? selectedWeightUnit,
     String? comment,
-    CreateWorkoutPart? part,
+    WorkoutPart? part,
   }) {
     return CreateWorkoutPartState(
       step: step ?? this.step,

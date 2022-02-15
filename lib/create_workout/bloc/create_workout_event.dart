@@ -34,11 +34,19 @@ class CreateWorkoutDescriptionChanged extends CreateWorkoutEvent {
   List<Object> get props => [description];
 }
 
+class CreateWorkoutDescriptionConfirmed extends CreateWorkoutEvent {
+  const CreateWorkoutDescriptionConfirmed();
+}
+
 class CreateWorkoutPartConfirmed extends CreateWorkoutEvent {
   const CreateWorkoutPartConfirmed(this.part);
 
-  final CreateWorkoutPart part;
+  final WorkoutPart part;
 
   @override
   List<Object> get props => [part];
+}
+
+class CreateWorkoutConfirmed extends CreateWorkoutEvent {
+  const CreateWorkoutConfirmed();
 }

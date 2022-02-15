@@ -13,9 +13,12 @@ WorkoutPart _$WorkoutPartFromJson(Map<String, dynamic> json) => $checkedCreate(
       json,
       ($checkedConvert) {
         final val = WorkoutPart(
-          id: $checkedConvert('id', (v) => v as int),
-          exercise: $checkedConvert('exercise',
-              (v) => SearchExercise.fromJson(v as Map<String, dynamic>)),
+          id: $checkedConvert('id', (v) => v as int?),
+          exercise: $checkedConvert(
+              'exercise',
+              (v) => v == null
+                  ? null
+                  : SearchExercise.fromJson(v as Map<String, dynamic>)),
           weightUnit: $checkedConvert('weight_unit', (v) => v as int),
           sets: $checkedConvert(
               'sets',

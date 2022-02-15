@@ -3,35 +3,37 @@ part of 'create_workout_bloc.dart';
 class CreateWorkoutState extends Equatable {
   const CreateWorkoutState({
     this.step = 0,
-    this.nameOfWorkout = '',
     this.description = '',
-    this.workoutParts = const [],
+    this.wod = const Wod(
+      id: 1,
+      name: '',
+      description: '',
+      creationDate: '',
+      parts: [],
+    ),
   });
 
   final int step;
-  final String nameOfWorkout;
   final String description;
-  final List<CreateWorkoutPart> workoutParts;
+  final Wod wod;
 
   CreateWorkoutState copyWith({
     int? step,
     String? nameOfWorkout,
     String? description,
-    List<CreateWorkoutPart>? workoutParts,
+    Wod? wod,
   }) {
     return CreateWorkoutState(
       step: step ?? this.step,
-      nameOfWorkout: nameOfWorkout ?? this.nameOfWorkout,
       description: description ?? this.description,
-      workoutParts: workoutParts ?? this.workoutParts,
+      wod: wod ?? this.wod,
     );
   }
 
   @override
-  List<Object> get props => [
+  List<Object?> get props => [
         step,
-        nameOfWorkout,
         description,
-        workoutParts,
+        wod,
       ];
 }

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:workout_manager_api/workout_manager_api.dart'
     hide User, SearchExercise, SettingWeightUnit;
@@ -95,17 +96,6 @@ class WodGeneratorRepository {
         [];
   }
 
-  Future<void> createWorkout({
-    required String email,
-    required String password,
-  }) async {
-    final token = await _workoutManagerApiClient.login(email, password);
-    _token = token;
-    final prefs = await SharedPreferences.getInstance();
-    prefs.setString(kToken, _token);
-    _controller.add(AuthenticationStatus.authenticated);
-  }
-
   Future<List<WeightUnit>> getWeightUnits() async {
     final weightUnits =
         await _workoutManagerApiClient.getSettingWeightUnits(token: _token);
@@ -117,5 +107,47 @@ class WodGeneratorRepository {
           ),
         )
         .toList();
+  }
+
+  Future<void> createWorkout({required Wod wod}) async {
+    final createdWorkout = await _workoutManagerApiClient.createWorkout(
+      token: _token,
+      name: wod.name,
+      description: wod.description,
+    );
+    final lday = Day(
+        id: Random().nextInt(100),
+        training: createdWorkout.id,
+        description: createdWorkout.description,
+        day: [1]);
+    final createdDay =
+        await _workoutManagerApiClient.createDay(token: _token, day: lday);
+    await Future.forEach<MapEntry<int, WorkoutPart>>(wod.parts.asMap().entries,
+        (element) async {
+      final index = element.key;
+      final part = element.value;
+      final lset = Set(
+        id: part.id ?? Random().nextInt(100),
+        exerciseDay: createdDay.id,
+        sets: part.sets.length,
+        order: index,
+        comment: part.comment,
+      );
+      final set =
+          await _workoutManagerApiClient.createSet(token: _token, set: lset);
+      final lsetting = Setting(
+        id: Random().nextInt(100),
+        set: set.id,
+        exercise: part.exercise!.id,
+        repitionUnit: 1,
+        reps: part.sets[index].reps,
+        weight: '1',
+        weightUnit: part.weightUnit,
+        order: index,
+        comment: part.comment,
+      );
+      await _workoutManagerApiClient.createSetting(
+          token: _token, setting: lsetting);
+    });
   }
 }

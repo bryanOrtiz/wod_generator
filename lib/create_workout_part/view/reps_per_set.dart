@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wod_generator/create_workout_part/bloc/create_workout_part_bloc.dart';
 import 'package:wod_generator_repository/wod_generator_repository.dart';
-import '../models/models.dart';
 
 class RepsPerSet extends StatelessWidget {
   const RepsPerSet({Key? key}) : super(key: key);
@@ -40,15 +39,6 @@ class RepsPerSet extends StatelessWidget {
         },
       ),
     );
-  }
-
-  String _generateText(List<WorkoutSet> state) {
-    var retVal = '';
-    state.asMap().forEach((index, value) {
-      final newLine = index == state.length - 1 ? '' : '\n';
-      retVal += '1 x ${value.reps}' + newLine;
-    });
-    return retVal;
   }
 }
 

@@ -17,8 +17,8 @@ class WorkoutDescription extends StatelessWidget {
                 style: Theme.of(context).textTheme.caption,
               ),
               subtitle: Text(
-                state.description.isNotEmpty
-                    ? state.description
+                state.wod.description.isNotEmpty
+                    ? state.wod.description
                     : 'Leave a brief description about the workout and what goals should be attained.',
                 style: Theme.of(context).textTheme.bodyText1,
                 maxLines: 1,
@@ -57,7 +57,10 @@ class _BottomSheet extends StatelessWidget {
             _DescriptionField(),
             const Spacer(),
             ElevatedButton(
-              onPressed: () => Navigator.of(context).pop(),
+              onPressed: () {
+                bloc.add(const CreateWorkoutDescriptionConfirmed());
+                Navigator.of(context).pop();
+              },
               child: const Text('Submit'),
             ),
           ],
@@ -75,7 +78,7 @@ class _DescriptionField extends StatelessWidget {
         return Padding(
           padding: const EdgeInsets.all(16),
           child: TextFormField(
-            initialValue: state.description,
+            initialValue: state.wod.description,
             minLines: 1,
             maxLines: 5,
             keyboardType: TextInputType.multiline,

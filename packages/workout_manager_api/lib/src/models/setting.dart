@@ -13,7 +13,7 @@ class Setting extends Equatable {
     required this.reps,
     required this.weight,
     required this.weightUnit,
-    required this.rir,
+    this.rir,
     required this.order,
     required this.comment,
   });

@@ -8,8 +8,7 @@ class NameOfWorkoutField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<CreateWorkoutBloc, CreateWorkoutState>(
-      buildWhen: (previous, current) =>
-          previous.nameOfWorkout != current.nameOfWorkout,
+      buildWhen: (previous, current) => previous.wod.name != current.wod.name,
       builder: (context, state) {
         return TextFormField(
           decoration: const InputDecoration(

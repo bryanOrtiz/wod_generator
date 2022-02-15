@@ -1,6 +1,5 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:wod_generator/create_workout_part/models/models.dart';
 import 'package:wod_generator_repository/wod_generator_repository.dart';
 
 part 'create_workout_event.dart';
@@ -13,7 +12,9 @@ class CreateWorkoutBloc extends Bloc<CreateWorkoutEvent, CreateWorkoutState> {
     on<CreateWorkoutStepChanged>(_onStepChanged);
     on<CreateWorkoutNameChanged>(_onNameOfWorkoutChanged);
     on<CreateWorkoutDescriptionChanged>(_onDescriptionChanged);
+    on<CreateWorkoutDescriptionConfirmed>(_onDescriptionConfirmed);
     on<CreateWorkoutPartConfirmed>(_onCreateWorkoutPartConfirmed);
+    on<CreateWorkoutConfirmed>(_onCreateWorkoutConfirmed);
   }
 
   final WodGeneratorRepository _wodGeneratorRepository;
@@ -35,7 +36,7 @@ class CreateWorkoutBloc extends Bloc<CreateWorkoutEvent, CreateWorkoutState> {
   ) {
     emit(
       state.copyWith(
-        nameOfWorkout: event.name,
+        wod: state.wod.copyWith(name: event.name),
       ),
     );
   }
@@ -51,16 +52,34 @@ class CreateWorkoutBloc extends Bloc<CreateWorkoutEvent, CreateWorkoutState> {
     );
   }
 
+  void _onDescriptionConfirmed(
+    CreateWorkoutDescriptionConfirmed event,
+    Emitter<CreateWorkoutState> emit,
+  ) {
+    emit(
+      state.copyWith(
+        wod: state.wod.copyWith(description: state.description),
+      ),
+    );
+  }
+
   void _onCreateWorkoutPartConfirmed(
     CreateWorkoutPartConfirmed event,
     Emitter<CreateWorkoutState> emit,
   ) {
-    var parts = state.workoutParts.toList();
+    var parts = state.wod.parts.toList();
     parts.add(event.part);
     emit(
       state.copyWith(
-        workoutParts: parts,
+        wod: state.wod.copyWith(parts: parts),
       ),
     );
+  }
+
+  Future<void> _onCreateWorkoutConfirmed(
+    CreateWorkoutConfirmed event,
+    Emitter<CreateWorkoutState> emit,
+  ) async {
+    await _wodGeneratorRepository.createWorkout(wod: state.wod);
   }
 }
