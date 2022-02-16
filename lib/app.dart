@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:wod_generator/home/view/home_page.dart';
 import 'package:wod_generator/sign_in/view/sign_in_page.dart';
 import 'package:wod_generator/splash/view/splash_page.dart';
+import 'package:wod_generator/wods/wods.dart';
 import 'package:wod_generator_repository/wod_generator_repository.dart';
 
 import 'authentication/bloc/authentication_bloc.dart';
@@ -51,7 +51,7 @@ class _AppViewState extends State<AppView> {
             switch (state.status) {
               case AuthenticationStatus.authenticated:
                 _navigator.pushAndRemoveUntil<void>(
-                  HomePage.route(),
+                  WodsPage.route(),
                   (route) => false,
                 );
                 break;

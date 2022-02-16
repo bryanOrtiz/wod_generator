@@ -150,4 +150,16 @@ class WodGeneratorRepository {
           token: _token, setting: lsetting);
     });
   }
+
+  Future<List<Wod>> getWods() async {
+    final workouts = await _workoutManagerApiClient.getWorkouts(token: _token);
+    return workouts.results
+        .map((workout) => Wod(
+            id: workout.id,
+            name: workout.name,
+            description: workout.description,
+            creationDate: workout.creationDate,
+            parts: []))
+        .toList();
+  }
 }
