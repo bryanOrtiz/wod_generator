@@ -185,26 +185,31 @@ class WodGeneratorRepository {
     );
     details.days.forEach((infoSets) {
       infoSets.sets.forEach((infoSet) {
-        infoSet.exercises.forEach((infoExercise) {
+        final parts = infoSet.exercises.fold<List<WorkoutPart>>([],
+            (previousValue, infoExercise) {
           final exercise = infoExercise.exercise;
-          final numOfSets = infoExercise.settings.length;
           final comment = infoSet.set.comment;
           final id = infoSet.set.id;
-          final parts = infoExercise.settings.fold<List<WorkoutPart>>([],
-              (previousValue, setting) {
-            final workoutSets = List.generate(
-                numOfSets, (index) => WorkoutSet(reps: setting.reps));
-            final part = WorkoutPart(
-                id: id,
-                exercise: null, // TODO: choose correct exercise type
-                weightUnit: setting.weightUnit,
-                sets: workoutSets,
-                comment: comment);
-            previousValue.add(part);
-            return previousValue;
-          });
-          wod = wod.copyWith(parts: parts);
+          final workoutSets = infoExercise.settings
+              .map((e) => WorkoutSet(reps: e.reps))
+              .toList();
+          final weightUnit = infoExercise.settings.first.weightUnit;
+          final part = WorkoutPart(
+              id: id,
+              exercise: SearchExercise(
+                id: exercise.id,
+                name: exercise.name,
+                category: exercise.category.toString(),
+                image: null,
+                imageThumbnail: null,
+              ), // TODO: choose correct exercise type
+              weightUnit: weightUnit,
+              sets: workoutSets,
+              comment: comment);
+          previousValue.add(part);
+          return previousValue;
         });
+        wod = wod.copyWith(parts: parts);
       });
     });
     return wod;
