@@ -3,7 +3,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'workout.g.dart';
 
-@JsonSerializable(genericArgumentFactories: true)
+@JsonSerializable()
 class Workout extends Equatable {
   const Workout({
     required this.id,

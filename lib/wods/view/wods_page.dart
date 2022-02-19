@@ -47,6 +47,17 @@ class _WodsListView extends StatelessWidget {
                     child: InkWell(
                       child: ListTile(
                         title: Text(wod.name),
+                        subtitle: Column(
+                          children: List.generate(wod.parts.length, (index) {
+                            final part = wod.parts[index];
+                            return Column(
+                              children: [
+                                Text(part.exercise?.name ?? 'No exercise name'),
+                                Text(part.description())
+                              ],
+                            );
+                          }),
+                        ),
                       ),
                       onTap: () =>
                           print('this is where edit mode will commence'),
