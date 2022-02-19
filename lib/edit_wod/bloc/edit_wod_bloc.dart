@@ -15,6 +15,8 @@ class EditWodBloc extends Bloc<EditWodEvent, EditWodState> {
         super(EditWodState(wod: wod)) {
     on<EditWodGetDetail>(_onGetWodDetails);
     on<EditWodDelete>(_onDelete);
+    on<EditWodEditToggled>(_onEditModeToggled);
+    on<EditWodUpdateToggled>(_onUpdateToggled);
 
     add(const EditWodGetDetail());
   }
@@ -48,5 +50,27 @@ class EditWodBloc extends Bloc<EditWodEvent, EditWodState> {
     } catch (e) {
       // TODO: error handling
     }
+  }
+
+  void _onEditModeToggled(
+    EditWodEditToggled event,
+    Emitter<EditWodState> emit,
+  ) {
+    emit(
+      state.copyWith(
+        isEditable: true,
+      ),
+    );
+  }
+
+  void _onUpdateToggled(
+    EditWodUpdateToggled event,
+    Emitter<EditWodState> emit,
+  ) {
+    emit(
+      state.copyWith(
+        isEditable: false,
+      ),
+    );
   }
 }

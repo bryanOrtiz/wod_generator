@@ -21,16 +21,33 @@ class EditWodPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Edit Wod'),
+    final ButtonStyle style =
+        TextButton.styleFrom(primary: Theme.of(context).colorScheme.onPrimary);
+    return BlocProvider(
+      create: (context) => EditWodBloc(
+        wod: _initialWod,
+        wodGeneratorRepository: context.read<WodGeneratorRepository>(),
       ),
-      body: BlocProvider(
-        create: (context) => EditWodBloc(
-          wod: _initialWod,
-          wodGeneratorRepository: context.read<WodGeneratorRepository>(),
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Edit Wod'),
+          actions: [
+            BlocBuilder<EditWodBloc, EditWodState>(
+              builder: (context, state) {
+                return TextButton(
+                  style: style,
+                  onPressed: () {
+                    context.read<EditWodBloc>().add(!state.isEditable
+                        ? const EditWodEditToggled()
+                        : const EditWodUpdateToggled());
+                  },
+                  child: Text(!state.isEditable ? 'Edit' : 'Update'),
+                );
+              },
+            )
+          ],
         ),
-        child: SafeArea(
+        body: SafeArea(
           child: BlocListener<EditWodBloc, EditWodState>(
             listener: (context, state) {
               if (state.isDeleted) {

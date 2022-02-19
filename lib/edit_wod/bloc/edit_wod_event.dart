@@ -14,3 +14,11 @@ class EditWodGetDetail extends EditWodEvent {
 class EditWodDelete extends EditWodEvent {
   const EditWodDelete();
 }
+
+class EditWodEditToggled extends EditWodEvent {
+  const EditWodEditToggled();
+}
+
+class EditWodUpdateToggled extends EditWodEvent {
+  const EditWodUpdateToggled();
+}
