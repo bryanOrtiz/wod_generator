@@ -17,9 +17,9 @@ class WorkoutInfoExerciseImage extends Equatable {
 
   Map<String, dynamic> toJson() => _$WorkoutInfoExerciseImageToJson(this);
 
-  final Exercise image;
+  final String image;
   @JsonKey(name: 'is_main')
-  final String isMain;
+  final bool isMain;
 
   @override
   List<Object?> get props => [

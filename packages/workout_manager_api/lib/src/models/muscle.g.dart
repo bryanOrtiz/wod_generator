@@ -15,16 +15,9 @@ Muscle _$MuscleFromJson(Map<String, dynamic> json) => $checkedCreate(
         final val = Muscle(
           name: $checkedConvert('name', (v) => v as String),
           isFront: $checkedConvert('is_front', (v) => v as bool),
-          imageUrlMain: $checkedConvert(
-              'image_url_main',
-              (v) => (v as List<dynamic>)
-                  .map((e) => Muscle.fromJson(e as Map<String, dynamic>))
-                  .toList()),
-          imageUrlSecondary: $checkedConvert(
-              'image_url_secondary',
-              (v) => (v as List<dynamic>)
-                  .map((e) => Muscle.fromJson(e as Map<String, dynamic>))
-                  .toList()),
+          imageUrlMain: $checkedConvert('image_url_main', (v) => v as String),
+          imageUrlSecondary:
+              $checkedConvert('image_url_secondary', (v) => v as String),
         );
         return val;
       },

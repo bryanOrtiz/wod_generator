@@ -22,9 +22,9 @@ class Muscle extends Equatable {
   @JsonKey(name: 'is_front')
   final bool isFront;
   @JsonKey(name: 'image_url_main')
-  final List<Muscle> imageUrlMain;
+  final String imageUrlMain;
   @JsonKey(name: 'image_url_secondary')
-  final List<Muscle> imageUrlSecondary;
+  final String imageUrlSecondary;
 
   @override
   List<Object?> get props => [

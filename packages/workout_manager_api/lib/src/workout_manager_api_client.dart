@@ -185,7 +185,7 @@ class WorkoutManagerApiClient {
   Future<Page<Workout>> getWorkouts({
     required String token,
   }) async {
-    final res = await _client.get(
+    final res = await get(
       Uri.parse('${_baseUrl}workout/'),
       headers: {
         'Authorization': 'Token ${token}',
@@ -210,5 +210,17 @@ class WorkoutManagerApiClient {
     );
     final decodedRes = jsonDecode(res.body);
     return WorkoutInfo.fromJson(decodedRes as Map<String, dynamic>);
+  }
+
+  Future<void> deleteWorkout({
+    required String token,
+    required String id,
+  }) async {
+    await delete(
+      Uri.parse('${_baseUrl}workout/$id/'),
+      headers: {
+        'Authorization': 'Token ${token}',
+      },
+    );
   }
 }

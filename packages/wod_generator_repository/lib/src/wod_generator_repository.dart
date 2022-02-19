@@ -15,6 +15,7 @@ class WodGeneratorRepository {
       : _workoutManagerApiClient =
             workoutManagerApiClient ?? WorkoutManagerApiClient();
   final _controller = StreamController<AuthenticationStatus>();
+  final _wodController = StreamController<List<Wod>>();
 
   final kToken = 'kToken';
   late String _token;
@@ -74,7 +75,10 @@ class WodGeneratorRepository {
     _controller.add(AuthenticationStatus.unauthenticated);
   }
 
-  void dispose() => _controller.close();
+  void dispose() {
+    _controller.close();
+    _wodController.close();
+  }
 
   Future<List<SearchExercise>> searchExerciseByTerm({
     required String term,
@@ -151,9 +155,13 @@ class WodGeneratorRepository {
     });
   }
 
+  Stream<List<Wod>> get wods async* {
+    yield* _wodController.stream;
+  }
+
   Future<List<Wod>> getWods() async {
     final workouts = await _workoutManagerApiClient.getWorkouts(token: _token);
-    return workouts.results
+    final retVal = workouts.results
         .map((workout) => Wod(
             id: workout.id,
             name: workout.name,
@@ -161,5 +169,51 @@ class WodGeneratorRepository {
             creationDate: workout.creationDate,
             parts: []))
         .toList();
+    _wodController.add(retVal);
+    return retVal;
+  }
+
+  Future<Wod> getWodDetails(String id) async {
+    final details =
+        await _workoutManagerApiClient.getWorkoutDetails(token: _token, id: id);
+    Wod wod = Wod(
+      id: details.workout.id,
+      name: details.workout.name,
+      description: details.workout.description,
+      creationDate: details.workout.creationDate,
+      parts: [],
+    );
+    details.days.forEach((infoSets) {
+      infoSets.sets.forEach((infoSet) {
+        infoSet.exercises.forEach((infoExercise) {
+          final exercise = infoExercise.exercise;
+          final numOfSets = infoExercise.settings.length;
+          final comment = infoSet.set.comment;
+          final id = infoSet.set.id;
+          final parts = infoExercise.settings.fold<List<WorkoutPart>>([],
+              (previousValue, setting) {
+            final workoutSets = List.generate(
+                numOfSets, (index) => WorkoutSet(reps: setting.reps));
+            final part = WorkoutPart(
+                id: id,
+                exercise: null, // TODO: choose correct exercise type
+                weightUnit: setting.weightUnit,
+                sets: workoutSets,
+                comment: comment);
+            previousValue.add(part);
+            return previousValue;
+          });
+          wod = wod.copyWith(parts: parts);
+        });
+      });
+    });
+    return wod;
+  }
+
+  Future<void> deleteWod(Wod wod) async {
+    await _workoutManagerApiClient.deleteWorkout(
+        token: _token, id: wod.id.toString());
+    Future.delayed(Duration(milliseconds: 500));
+    await getWods();
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wod_generator/create_workout/create_workout.dart';
+import 'package:wod_generator/edit_wod/view/edit_wod_page.dart';
 import 'package:wod_generator/wods/bloc/wods_bloc.dart';
 import 'package:wod_generator_repository/wod_generator_repository.dart';
 
@@ -60,7 +61,7 @@ class _WodsListView extends StatelessWidget {
                         ),
                       ),
                       onTap: () =>
-                          print('this is where edit mode will commence'),
+                          Navigator.of(context).push(EditWodPage.route(wod)),
                     ),
                   );
                 },

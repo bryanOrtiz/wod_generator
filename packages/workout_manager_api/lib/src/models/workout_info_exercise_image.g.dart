@@ -15,9 +15,8 @@ WorkoutInfoExerciseImage _$WorkoutInfoExerciseImageFromJson(
       json,
       ($checkedConvert) {
         final val = WorkoutInfoExerciseImage(
-          image: $checkedConvert(
-              'image', (v) => Exercise.fromJson(v as Map<String, dynamic>)),
-          isMain: $checkedConvert('is_main', (v) => v as String),
+          image: $checkedConvert('image', (v) => v as String),
+          isMain: $checkedConvert('is_main', (v) => v as bool),
         );
         return val;
       },
