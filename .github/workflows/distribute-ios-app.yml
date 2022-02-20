@@ -9,6 +9,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       # - run: cd ios 
-      - run: cd ios && pwd && ls && fastlane firebase
-        # env:
-        #   MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+      - run: cd ios && pwd && ls && fastlane firebase token:$FIREBASE_TOKEN
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
