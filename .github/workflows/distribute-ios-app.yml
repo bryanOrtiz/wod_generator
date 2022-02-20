@@ -8,7 +8,7 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v2
-      - run: cd ios 
-      - run: fastlane firebase
+      # - run: cd ios 
+      - run: cd ios && pwd && ls && fastlane firebase
         # env:
         #   MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
