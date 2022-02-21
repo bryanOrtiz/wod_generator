@@ -30,7 +30,10 @@ platform :ios do
     )
     increment_build_number({ build_number: latest_release[:buildVersion].to_i + 1 })
     app_store_connect_api_key()
-    match(type: "adhoc")
+    match(
+      type: "adhoc",
+      readonly: true
+    )
     build_app(
       workspace: "Runner.xcworkspace", 
       scheme: "Runner", 
