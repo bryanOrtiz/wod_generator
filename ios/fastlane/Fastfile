@@ -42,7 +42,8 @@ platform :ios do
     build_app(
       workspace: "Runner.xcworkspace", 
       scheme: "Runner", 
-      export_method: "ad-hoc"
+      export_method: "ad-hoc",
+      skip_profile_detection: true,
     )
     firebase_app_distribution(
       app: id,
