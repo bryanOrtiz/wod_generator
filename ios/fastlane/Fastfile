@@ -39,6 +39,11 @@ platform :ios do
       workspace: "Runner.xcworkspace", 
       scheme: "Runner", 
       export_method: "ad-hoc"
+      export_options: {
+        provisioningProfiles: { 
+            "com.ortiz.bryan" => "match AdHoc_com.ortiz.bryan"
+        }
+      }
     )
     firebase_app_distribution(
       app: id,
