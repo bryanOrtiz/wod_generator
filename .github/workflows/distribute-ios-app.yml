@@ -12,3 +12,4 @@ jobs:
       - run: cd ios && pwd && ls && fastlane firebase token:$FIREBASE_TOKEN
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
