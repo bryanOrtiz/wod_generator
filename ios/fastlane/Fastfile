@@ -24,6 +24,7 @@ platform :ios do
 
   desc "Push a new beta build to Firebase"
   lane :firebase do |options|
+    setup_ci if ENV['CI']
     id = "1:495706644724:ios:76923be8af952b891efea1"
     latest_release = firebase_app_distribution_get_latest_release(
       app: id
