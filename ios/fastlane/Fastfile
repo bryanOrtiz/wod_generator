@@ -71,8 +71,8 @@ platform :ios do
     match(
       type: "adhoc",
       readonly: true,
-      keychain_name: keychain_name,
-      keychain_password: keychain_password
+      # keychain_name: keychain_name,
+      # keychain_password: keychain_password
     )
     build_app(
       workspace: "Runner.xcworkspace", 
@@ -86,6 +86,6 @@ platform :ios do
       release_notes: "Lots of amazing new features to test out!",
       firebase_cli_token: options[:token]
     )
-    delete_temp_keychain(keychain_name)
+    # delete_temp_keychain(keychain_name)
   end
 end
