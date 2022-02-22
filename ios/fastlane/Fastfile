@@ -56,6 +56,11 @@ platform :ios do
     latest_release = firebase_app_distribution_get_latest_release(
       app: id
     )
+
+    cocoapods(
+      podfile: "./Podfile"
+    )
+
     increment_build_number({ build_number: latest_release[:buildVersion].to_i + 1 })
     app_store_connect_api_key()
     # match(
