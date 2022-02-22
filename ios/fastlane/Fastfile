@@ -13,28 +13,7 @@
 # Uncomment the line if you want fastlane to automatically update itself
 # update_fastlane
 
-TEMP_KEYCHAIN_USER = ENV["TEMP_KEYCHAIN_USER"]
-TEMP_KEYCHAIN_PASSWORD = ENV["TEMP_KEYCHAIN_PASSWORD"]
-
-def delete_temp_keychain(name)
-  delete_keychain(
-    name: name
-  ) if File.exist? File.expand_path("~/Library/Keychains/#{name}-db")
-end
-
-def create_temp_keychain(name, password)
-  create_keychain(
-    name: name,
-    password: password,
-    unlock: false,
-    timeout: 0
-  )
-end
-
-def ensure_temp_keychain(name, password)
-  delete_temp_keychain(name)
-  create_temp_keychain(name, password)
-end
+FIREBASE_TOKEN = ENV["FIREBASE_TOKEN"]
 
 default_platform(:ios)
 
@@ -48,44 +27,29 @@ platform :ios do
   desc "Push a new beta build to Firebase"
   lane :firebase do |options|
     setup_ci if ENV['CI']
-    # keychain_name = TEMP_KEYCHAIN_USER
-    # keychain_password = TEMP_KEYCHAIN_PASSWORD
-    # ensure_temp_keychain(keychain_name, keychain_password)
 
     id = "1:495706644724:ios:76923be8af952b891efea1"
     latest_release = firebase_app_distribution_get_latest_release(
       app: id
     )
 
-    # cocoapods( 
-    #   clean
-    #   podfile: "./Podfile"
-    # )
-
     increment_build_number({ build_number: latest_release[:buildVersion].to_i + 1 })
     app_store_connect_api_key()
-    # match(
-    #   type: "development",
-    #   readonly: true,
-    # )
+
     match(
       type: "adhoc",
       readonly: true,
-      # keychain_name: keychain_name,
-      # keychain_password: keychain_password
     )
     build_app(
       workspace: "Runner.xcworkspace", 
       scheme: "Runner", 
       export_method: "ad-hoc",
-      # skip_profile_detection: true,
     )
     firebase_app_distribution(
       app: id,
       groups: "family",
       release_notes: "Lots of amazing new features to test out!",
-      firebase_cli_token: options[:token]
+      firebase_cli_token: FIREBASE_TOKEN
     )
-    # delete_temp_keychain(keychain_name)
   end
 end
