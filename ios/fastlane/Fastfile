@@ -47,19 +47,20 @@ platform :ios do
 
   desc "Push a new beta build to Firebase"
   lane :firebase do |options|
-    # setup_ci if ENV['CI']
-    keychain_name = TEMP_KEYCHAIN_USER
-    keychain_password = TEMP_KEYCHAIN_PASSWORD
-    ensure_temp_keychain(keychain_name, keychain_password)
+    setup_ci if ENV['CI']
+    # keychain_name = TEMP_KEYCHAIN_USER
+    # keychain_password = TEMP_KEYCHAIN_PASSWORD
+    # ensure_temp_keychain(keychain_name, keychain_password)
 
     id = "1:495706644724:ios:76923be8af952b891efea1"
     latest_release = firebase_app_distribution_get_latest_release(
       app: id
     )
 
-    cocoapods(
-      podfile: "./Podfile"
-    )
+    # cocoapods( 
+    #   clean
+    #   podfile: "./Podfile"
+    # )
 
     increment_build_number({ build_number: latest_release[:buildVersion].to_i + 1 })
     app_store_connect_api_key()
