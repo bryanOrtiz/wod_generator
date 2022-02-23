@@ -89,7 +89,7 @@ class WorkoutManagerApiClient {
     required String token,
     required Day day,
   }) async {
-    final res = await _client.post(
+    final res = await post(
       Uri.parse('${_baseUrl}day/'),
       headers: {
         'Authorization': 'Token ${token}',
@@ -154,7 +154,7 @@ class WorkoutManagerApiClient {
     required Setting setting,
   }) async {
     final res = await post(
-      Uri.parse('${_baseUrl}set/'),
+      Uri.parse('${_baseUrl}setting/'),
       headers: {
         'Authorization': 'Token ${token}',
         'Content-Type': 'application/json',

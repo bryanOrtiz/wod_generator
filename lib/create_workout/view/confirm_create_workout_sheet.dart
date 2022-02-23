@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wod_generator/create_workout/bloc/create_workout_bloc.dart';
 import 'package:wod_generator_repository/wod_generator_repository.dart';
+import 'package:formz/formz.dart';
 
 class ConfirmCreateWorkoutSheet extends StatelessWidget {
   const ConfirmCreateWorkoutSheet({Key? key, required this.bloc})
@@ -15,17 +16,17 @@ class ConfirmCreateWorkoutSheet extends StatelessWidget {
       child: SafeArea(
         child: BlocListener<CreateWorkoutBloc, CreateWorkoutState>(
           listener: (context, state) {
-            // TODO: implement listener
+            if (state.status.isSubmissionSuccess) {
+              Navigator.of(context).popUntil((route) => route.isFirst);
+            }
+            // TODO: implement listener for errors
           },
           child: Column(
             children: [
               Expanded(
                 child: _WorkoutListView(),
               ),
-              ElevatedButton(
-                onPressed: () => bloc.add(const CreateWorkoutConfirmed()),
-                child: const Text('Submit'),
-              ),
+              _SubmitButton(),
             ],
           ),
         ),
@@ -127,6 +128,29 @@ class _WorkoutPartListView extends StatelessWidget {
           );
         },
       ),
+    );
+  }
+}
+
+class _SubmitButton extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<CreateWorkoutBloc, CreateWorkoutState>(
+      builder: (context, state) {
+        return ElevatedButton(
+          onPressed: () => context
+              .read<CreateWorkoutBloc>()
+              .add(const CreateWorkoutConfirmed()),
+          child: (state.status.isSubmissionInProgress)
+              ? SizedBox.square(
+                  child: CircularProgressIndicator(
+                    color: Theme.of(context).colorScheme.onPrimary,
+                  ),
+                  dimension: 24,
+                )
+              : const Text('Submit'),
+        );
+      },
     );
   }
 }

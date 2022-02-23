@@ -5,6 +5,7 @@ class CreateWorkoutState extends Equatable {
     this.step = 0,
     this.name = const WorkoutName.pure(),
     this.description = const WorkoutDescription.pure(),
+    this.partsInput = const WorkoutPartsInput.pure(),
     this.wod = const Wod(
       id: 1,
       name: '',
@@ -18,6 +19,7 @@ class CreateWorkoutState extends Equatable {
   final int step;
   final WorkoutName name;
   final WorkoutDescription description;
+  final WorkoutPartsInput partsInput;
   final Wod wod;
   final FormzStatus status;
 
@@ -25,6 +27,7 @@ class CreateWorkoutState extends Equatable {
     int? step,
     WorkoutName? name,
     WorkoutDescription? description,
+    WorkoutPartsInput? partsInput,
     Wod? wod,
     FormzStatus? status,
   }) {
@@ -32,6 +35,7 @@ class CreateWorkoutState extends Equatable {
       step: step ?? this.step,
       name: name ?? this.name,
       description: description ?? this.description,
+      partsInput: partsInput ?? this.partsInput,
       wod: wod ?? this.wod,
       status: status ?? this.status,
     );
@@ -42,6 +46,7 @@ class CreateWorkoutState extends Equatable {
         step,
         name,
         description,
+        partsInput,
         wod,
         status,
       ];

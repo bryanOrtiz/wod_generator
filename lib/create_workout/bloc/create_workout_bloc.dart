@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:formz/formz.dart';
-import 'package:wod_generator/create_workout/bloc/models/models.dart';
+import 'package:wod_generator/create_workout/models/models.dart';
 import 'package:wod_generator_repository/wod_generator_repository.dart';
 
 part 'create_workout_event.dart';
@@ -45,6 +45,7 @@ class CreateWorkoutBloc extends Bloc<CreateWorkoutEvent, CreateWorkoutState> {
           [
             name,
             state.description,
+            state.partsInput,
           ],
         ),
       ),
@@ -63,6 +64,7 @@ class CreateWorkoutBloc extends Bloc<CreateWorkoutEvent, CreateWorkoutState> {
           [
             state.name,
             description,
+            state.partsInput,
           ],
         ),
       ),
@@ -86,9 +88,18 @@ class CreateWorkoutBloc extends Bloc<CreateWorkoutEvent, CreateWorkoutState> {
   ) {
     var parts = state.wod.parts.toList();
     parts.add(event.part);
+    final partsInput = WorkoutPartsInput.dirty(parts);
     emit(
       state.copyWith(
-        wod: state.wod.copyWith(parts: parts),
+        partsInput: partsInput,
+        wod: state.wod.copyWith(parts: partsInput.value),
+        status: Formz.validate(
+          [
+            state.name,
+            state.description,
+            partsInput,
+          ],
+        ),
       ),
     );
   }
@@ -97,6 +108,18 @@ class CreateWorkoutBloc extends Bloc<CreateWorkoutEvent, CreateWorkoutState> {
     CreateWorkoutConfirmed event,
     Emitter<CreateWorkoutState> emit,
   ) async {
-    await _wodGeneratorRepository.createWorkout(wod: state.wod);
+    emit(state.copyWith(status: FormzStatus.submissionInProgress));
+    try {
+      await _wodGeneratorRepository.createWorkout(wod: state.wod);
+      emit(state.copyWith(status: FormzStatus.submissionSuccess));
+    } catch (e) {
+      addError(e, StackTrace.current);
+      emit(state.copyWith(status: FormzStatus.submissionFailure));
+    }
+  }
+
+  @override
+  void onError(Object error, StackTrace stackTrace) {
+    super.onError(error, stackTrace);
   }
 }

@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wod_generator/create_workout/bloc/create_workout_bloc.dart';
-import 'package:wod_generator/create_workout/bloc/models/workout_description.dart';
-import 'package:wod_generator/create_workout/bloc/models/workout_name.dart';
+import 'package:wod_generator/create_workout/models/models.dart';
 
 class CreateWorkoutError extends StatelessWidget {
   const CreateWorkoutError({Key? key, required this.bloc}) : super(key: key);
@@ -37,6 +36,9 @@ class _Title extends StatelessWidget {
         if (state.description.error != null) {
           return const Text('The description field is invalid');
         }
+        if (state.partsInput.error != null) {
+          return const Text('The workout part section is invalid');
+        }
         return const SizedBox.shrink();
       },
     );
@@ -58,6 +60,11 @@ class _Content extends StatelessWidget {
                 WorkoutDescriptionValidationError.empty) {
           return const Text(
               'You must enter a description of the workout in order to continue.');
+        }
+        if (state.partsInput.error != null &&
+            state.partsInput.error! == WorkoutPartsInputValidationError.empty) {
+          return const Text(
+              'You must enter add a part of the workout in order to continue.');
         }
         return const SizedBox.shrink();
       },
