@@ -82,6 +82,7 @@ class _DescriptionField extends StatelessWidget {
             minLines: 1,
             maxLines: 5,
             keyboardType: TextInputType.multiline,
+            textInputAction: TextInputAction.done,
             decoration: const InputDecoration(
               hintText:
                   'Leave a brief description about the workout and what goals should be attained.',

@@ -1,5 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:formz/formz.dart';
+import 'package:wod_generator/create_workout/bloc/models/models.dart';
 import 'package:wod_generator_repository/wod_generator_repository.dart';
 
 part 'create_workout_event.dart';
@@ -34,9 +36,17 @@ class CreateWorkoutBloc extends Bloc<CreateWorkoutEvent, CreateWorkoutState> {
     CreateWorkoutNameChanged event,
     Emitter<CreateWorkoutState> emit,
   ) {
+    final name = WorkoutName.dirty(event.name);
     emit(
       state.copyWith(
-        wod: state.wod.copyWith(name: event.name),
+        name: name,
+        wod: state.wod.copyWith(name: name.value),
+        status: Formz.validate(
+          [
+            name,
+            state.description,
+          ],
+        ),
       ),
     );
   }
@@ -45,9 +55,16 @@ class CreateWorkoutBloc extends Bloc<CreateWorkoutEvent, CreateWorkoutState> {
     CreateWorkoutDescriptionChanged event,
     Emitter<CreateWorkoutState> emit,
   ) {
+    final description = WorkoutDescription.dirty(event.description);
     emit(
       state.copyWith(
-        description: event.description,
+        description: description,
+        status: Formz.validate(
+          [
+            state.name,
+            description,
+          ],
+        ),
       ),
     );
   }
@@ -58,7 +75,7 @@ class CreateWorkoutBloc extends Bloc<CreateWorkoutEvent, CreateWorkoutState> {
   ) {
     emit(
       state.copyWith(
-        wod: state.wod.copyWith(description: state.description),
+        wod: state.wod.copyWith(description: state.description.value),
       ),
     );
   }
