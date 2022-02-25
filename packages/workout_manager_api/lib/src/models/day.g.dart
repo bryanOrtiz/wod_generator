@@ -13,7 +13,7 @@ Day _$DayFromJson(Map<String, dynamic> json) => $checkedCreate(
       json,
       ($checkedConvert) {
         final val = Day(
-          id: $checkedConvert('id', (v) => v as int),
+          id: $checkedConvert('id', (v) => v as int?),
           training: $checkedConvert('training', (v) => v as int),
           description: $checkedConvert('description', (v) => v as String),
           day: $checkedConvert(
@@ -23,9 +23,18 @@ Day _$DayFromJson(Map<String, dynamic> json) => $checkedCreate(
       },
     );
 
-Map<String, dynamic> _$DayToJson(Day instance) => <String, dynamic>{
-      'id': instance.id,
-      'training': instance.training,
-      'description': instance.description,
-      'day': instance.day,
-    };
+Map<String, dynamic> _$DayToJson(Day instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('id', instance.id);
+  val['training'] = instance.training;
+  val['description'] = instance.description;
+  val['day'] = instance.day;
+  return val;
+}

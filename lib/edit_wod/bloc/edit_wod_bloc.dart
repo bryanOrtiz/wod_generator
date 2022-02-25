@@ -84,7 +84,7 @@ class EditWodBloc extends Bloc<EditWodEvent, EditWodState> {
           updateStatus: FormzStatus.submissionInProgress,
         ),
       );
-      await Future.delayed(const Duration(milliseconds: 500));
+      await _wodGeneratorRepository.updateWorkout(wod: state.wod);
       emit(
         state.copyWith(
           updateStatus: FormzStatus.submissionSuccess,
@@ -131,6 +131,9 @@ class EditWodBloc extends Bloc<EditWodEvent, EditWodState> {
     emit(
       state.copyWith(
         name: name,
+        wod: state.wod.copyWith(
+          name: name.value,
+        ),
       ),
     );
   }
@@ -143,6 +146,9 @@ class EditWodBloc extends Bloc<EditWodEvent, EditWodState> {
     emit(
       state.copyWith(
         description: description,
+        wod: state.wod.copyWith(
+          description: description.value,
+        ),
       ),
     );
   }

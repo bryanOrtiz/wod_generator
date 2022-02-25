@@ -6,7 +6,7 @@ part 'day.g.dart';
 @JsonSerializable()
 class Day extends Equatable {
   const Day({
-    required this.id,
+    this.id,
     required this.training,
     required this.description,
     required this.day,
@@ -16,7 +16,8 @@ class Day extends Equatable {
 
   Map<String, dynamic> toJson() => _$DayToJson(this);
 
-  final int id;
+  @JsonKey(includeIfNull: false)
+  final int? id;
   final int training;
   final String description;
   final List<int> day;

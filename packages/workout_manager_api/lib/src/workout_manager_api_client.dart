@@ -9,6 +9,14 @@ class WorkoutManagerApiClient {
 
   final Client _client;
 
+  Map<String, String> _headers(String token) {
+    return {
+      'Authorization': 'Token ${token}',
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    };
+  }
+
   Future<String> login(String username, String password) async {
     final res = await _client.post(
       Uri.parse('${_baseUrl}login/'),
@@ -221,6 +229,112 @@ class WorkoutManagerApiClient {
       headers: {
         'Authorization': 'Token ${token}',
       },
+    );
+  }
+
+  Future<Workout> updateWorkout({
+    required String token,
+    required Workout workout,
+  }) async {
+    final res = await patch(
+      Uri.parse('${_baseUrl}workout/${workout.id}/'),
+      headers: _headers(token),
+      body: jsonEncode(workout.toJson()),
+    );
+    final decodedRes = jsonDecode(res.body);
+    return Workout.fromJson(decodedRes as Map<String, dynamic>);
+  }
+
+  Future<Page<Day>> getDayTrainingId({
+    required String token,
+    required String id,
+  }) async {
+    final filter = {
+      'training': id,
+    };
+    final res = await get(
+      Uri.parse('${_baseUrl}day/').replace(
+        queryParameters: filter,
+      ),
+      headers: _headers(token),
+    );
+    final decodedRes = jsonDecode(res.body);
+    return Page<Day>.fromJson(
+        decodedRes, (data) => Day.fromJson(data as Map<String, dynamic>));
+  }
+
+  Future<Page<Set>> getSetByDayId({
+    required String token,
+    required String dayId,
+  }) async {
+    final filter = {
+      'day': dayId,
+    };
+    final res = await get(
+      Uri.parse('${_baseUrl}set/').replace(
+        queryParameters: filter,
+      ),
+      headers: _headers(token),
+    );
+    final decodedRes = jsonDecode(res.body);
+    return Page<Set>.fromJson(
+        decodedRes, (data) => Set.fromJson(data as Map<String, dynamic>));
+  }
+
+  Future<Set> updateSet({
+    required String token,
+    required Set set,
+  }) async {
+    final res = await patch(
+      Uri.parse('${_baseUrl}set/${set.id}/'),
+      headers: _headers(token),
+      body: jsonEncode(set.toJson()),
+    );
+    return Set.fromJson(jsonDecode(res.body));
+  }
+
+  Future<Page<Setting>> getSettingsBySetId({
+    required String token,
+    required String setId,
+  }) async {
+    final filter = {
+      'set': setId,
+    };
+    final res = await get(
+      Uri.parse('${_baseUrl}setting/').replace(
+        queryParameters: filter,
+      ),
+      headers: _headers(token),
+    );
+    final decodedRes = jsonDecode(res.body);
+    return Page<Setting>.fromJson(
+        decodedRes, (data) => Setting.fromJson(data as Map<String, dynamic>));
+  }
+
+  Future<Setting> updateSetting({
+    required String token,
+    required Setting setting,
+  }) async {
+    final res = await patch(
+      Uri.parse('${_baseUrl}setting/${setting.id}/'),
+      headers: _headers(token),
+      body: jsonEncode(setting.toJson()),
+    );
+    return Setting.fromJson(jsonDecode(res.body));
+  }
+
+  Future<void> deleteSettingsBySetId({
+    required String token,
+    required String setId,
+  }) async {
+    final filter = {
+      'set': setId,
+    };
+    await delete(
+      Uri.parse('${_baseUrl}setting/${setId}/').replace(
+        queryParameters: filter,
+      ),
+      headers: _headers(token),
     );
   }
 }

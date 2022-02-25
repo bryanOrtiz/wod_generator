@@ -120,7 +120,6 @@ class WodGeneratorRepository {
       description: wod.description,
     );
     final lday = Day(
-        id: Random().nextInt(100),
         training: createdWorkout.id,
         description: createdWorkout.description,
         day: [1]);
@@ -132,7 +131,7 @@ class WodGeneratorRepository {
       final part = element.value;
       final lset = Set(
         id: part.id ?? Random().nextInt(100),
-        exerciseDay: createdDay.id,
+        exerciseDay: createdDay.id!,
         sets: part.sets.length,
         order: index,
         comment: part.comment,
@@ -220,6 +219,62 @@ class WodGeneratorRepository {
   Future<void> deleteWod(Wod wod) async {
     await _workoutManagerApiClient.deleteWorkout(
         token: _token, id: wod.id.toString());
+    Future.delayed(Duration(milliseconds: 500));
+    await getWods();
+  }
+
+  Future<void> updateWorkout({required Wod wod}) async {
+    final lWorkout = Workout(
+        id: wod.id,
+        name: wod.name,
+        description: wod.description,
+        creationDate: wod.creationDate);
+    final updatedWorkout = await _workoutManagerApiClient.updateWorkout(
+      token: _token,
+      workout: lWorkout,
+    );
+    // TODO: Finish updating whole Wod
+    // final pageDay = await _workoutManagerApiClient.getDayTrainingId(
+    //   token: _token,
+    //   id: updatedWorkout.id.toString(),
+    // );
+    // final day = pageDay.results.first;
+    // await Future.forEach<MapEntry<int, WorkoutPart>>(wod.parts.asMap().entries,
+    //     (element) async {
+    //   final index = element.key;
+    //   final part = element.value;
+    //   final lset = Set(
+    //     id: part.id!,
+    //     exerciseDay: day.id!,
+    //     sets: part.sets.length,
+    //     order: index,
+    //     comment: part.comment,
+    //   );
+    //   final set = await _workoutManagerApiClient.updateSet(
+    //     token: _token,
+    //     set: lset,
+    //   );
+    //   await _workoutManagerApiClient.deleteSettingsBySetId(
+    //     token: _token,
+    //     setId: set.id.toString(),
+    //   );
+    //   final lsetting = Setting(
+    //     id: Random().nextInt(100),
+    //     set: set.id,
+    //     exercise: part.exercise!.id,
+    //     repitionUnit: 1,
+    //     reps: part.sets[index].reps,
+    //     weight: '1',
+    //     weightUnit: part.weightUnit,
+    //     order: index,
+    //     comment: part.comment,
+    //   );
+    //   await _workoutManagerApiClient.createSetting(
+    //     token: _token,
+    //     setting: lsetting,
+    //   );
+    // });
+
     Future.delayed(Duration(milliseconds: 500));
     await getWods();
   }
