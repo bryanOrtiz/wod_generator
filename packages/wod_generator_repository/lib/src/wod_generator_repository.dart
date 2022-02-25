@@ -153,6 +153,8 @@ class WodGeneratorRepository {
       await _workoutManagerApiClient.createSetting(
           token: _token, setting: lsetting);
     });
+    Future.delayed(Duration(milliseconds: 500));
+    await getWods();
   }
 
   Stream<List<Wod>> get wods async* {

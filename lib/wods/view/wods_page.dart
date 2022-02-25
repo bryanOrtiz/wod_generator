@@ -21,6 +21,7 @@ class WodsPage extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(title: const Text('Wods')),
         body: BlocBuilder<WodsBloc, WodsState>(
+          buildWhen: (previous, current) => previous.wods != current.wods,
           builder: (context, state) {
             return state.wods != null && state.wods!.isNotEmpty
                 ? _WodsListView()

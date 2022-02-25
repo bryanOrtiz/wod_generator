@@ -10,6 +10,8 @@ class WorkoutDescription extends StatelessWidget {
     return Card(
       child: InkWell(
         child: BlocBuilder<CreateWorkoutBloc, CreateWorkoutState>(
+          buildWhen: (previous, current) =>
+              previous.wod.description != current.wod.description,
           builder: (context, state) {
             return ListTile(
               title: Text(
