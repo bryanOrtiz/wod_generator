@@ -233,47 +233,49 @@ class WodGeneratorRepository {
       token: _token,
       workout: lWorkout,
     );
-    // TODO: Finish updating whole Wod
-    // final pageDay = await _workoutManagerApiClient.getDayTrainingId(
-    //   token: _token,
-    //   id: updatedWorkout.id.toString(),
-    // );
-    // final day = pageDay.results.first;
-    // await Future.forEach<MapEntry<int, WorkoutPart>>(wod.parts.asMap().entries,
-    //     (element) async {
-    //   final index = element.key;
-    //   final part = element.value;
-    //   final lset = Set(
-    //     id: part.id!,
-    //     exerciseDay: day.id!,
-    //     sets: part.sets.length,
-    //     order: index,
-    //     comment: part.comment,
-    //   );
-    //   final set = await _workoutManagerApiClient.updateSet(
-    //     token: _token,
-    //     set: lset,
-    //   );
-    //   await _workoutManagerApiClient.deleteSettingsBySetId(
-    //     token: _token,
-    //     setId: set.id.toString(),
-    //   );
-    //   final lsetting = Setting(
-    //     id: Random().nextInt(100),
-    //     set: set.id,
-    //     exercise: part.exercise!.id,
-    //     repitionUnit: 1,
-    //     reps: part.sets[index].reps,
-    //     weight: '1',
-    //     weightUnit: part.weightUnit,
-    //     order: index,
-    //     comment: part.comment,
-    //   );
-    //   await _workoutManagerApiClient.createSetting(
-    //     token: _token,
-    //     setting: lsetting,
-    //   );
-    // });
+    final pageDay = await _workoutManagerApiClient.getDayTrainingId(
+      token: _token,
+      id: updatedWorkout.id.toString(),
+    );
+    final day = pageDay.results.first;
+    await Future.forEach<MapEntry<int, WorkoutPart>>(wod.parts.asMap().entries,
+        (element) async {
+      final index = element.key;
+      final part = element.value;
+      final lset = Set(
+        id: part.id!,
+        exerciseDay: day.id!,
+        sets: part.sets.length,
+        order: index,
+        comment: part.comment,
+      );
+      final set = await _workoutManagerApiClient.updateSet(
+        token: _token,
+        set: lset,
+      );
+      final pageSettings = await _workoutManagerApiClient.getSettingsBySetId(
+        token: _token,
+        setId: set.id.toString(),
+      );
+      await Future.forEach<Setting>(pageSettings.results, (setting) async {
+        if (setting.order != index) return;
+        final lsetting = Setting(
+          id: setting.id,
+          set: setting.set,
+          exercise: part.exercise!.id,
+          repitionUnit: 1,
+          reps: part.sets[index].reps,
+          weight: '1',
+          weightUnit: part.weightUnit,
+          order: index,
+          comment: part.comment,
+        );
+        await _workoutManagerApiClient.updateSetting(
+          token: _token,
+          setting: lsetting,
+        );
+      });
+    });
 
     Future.delayed(Duration(milliseconds: 500));
     await getWods();
