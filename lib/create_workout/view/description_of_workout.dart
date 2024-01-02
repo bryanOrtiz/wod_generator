@@ -16,13 +16,13 @@ class WorkoutDescription extends StatelessWidget {
             return ListTile(
               title: Text(
                 'Description',
-                style: Theme.of(context).textTheme.caption,
+                style: Theme.of(context).textTheme.bodySmall,
               ),
               subtitle: Text(
                 state.wod.description.isNotEmpty
                     ? state.wod.description
                     : 'Leave a brief description about the workout and what goals should be attained.',
-                style: Theme.of(context).textTheme.bodyText1,
+                style: Theme.of(context).textTheme.bodyLarge,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),

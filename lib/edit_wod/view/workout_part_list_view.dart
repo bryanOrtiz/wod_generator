@@ -17,7 +17,7 @@ class _WorkoutPartListView extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(vertical: 12),
                     child: Text(
                       'Parts',
-                      style: theme.textTheme.caption,
+                      style: theme.textTheme.bodySmall,
                     ),
                   );
                 default:
@@ -57,11 +57,11 @@ class _WorkoutPartListItem extends StatelessWidget {
               children: [
                 Text(
                   part.exercise!.name,
-                  style: theme.textTheme.subtitle2,
+                  style: theme.textTheme.titleSmall,
                 ),
                 Text(
                   part.description(),
-                  style: theme.textTheme.bodyText2,
+                  style: theme.textTheme.bodyMedium,
                 ),
               ],
             ),

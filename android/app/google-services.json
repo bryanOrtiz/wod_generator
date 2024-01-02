@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "495706644724",
+    "project_id": "wod-generator-eb509",
+    "storage_bucket": "wod-generator-eb509.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:495706644724:android:d1d989aecf5c29a81efea1",
+        "android_client_info": {
+          "package_name": "com.example.wod_generator"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "495706644724-f8gs2jqf49pe8duvnkohaf4ai5rp19en.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBLiGTXbMs99S4rFjSWtqgNWa8P6Rn-1QE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "495706644724-f8gs2jqf49pe8duvnkohaf4ai5rp19en.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "495706644724-aef7aik019n3c5p238pnk7c49br9snsr.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.ortiz.bryan"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

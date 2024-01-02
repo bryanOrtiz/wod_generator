@@ -1,5 +1,5 @@
-import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
 import 'package:wod_generator/create_workout/models/models.dart';
 import 'package:wod_generator_repository/wod_generator_repository.dart';
@@ -37,17 +37,20 @@ class CreateWorkoutBloc extends Bloc<CreateWorkoutEvent, CreateWorkoutState> {
     Emitter<CreateWorkoutState> emit,
   ) {
     final name = WorkoutName.dirty(event.name);
+    final isValid = Formz.validate(
+      [
+        name,
+        state.description,
+        state.partsInput,
+      ],
+    );
     emit(
       state.copyWith(
         name: name,
         wod: state.wod.copyWith(name: name.value),
-        status: Formz.validate(
-          [
-            name,
-            state.description,
-            state.partsInput,
-          ],
-        ),
+        status: isValid
+            ? FormzSubmissionStatus.inProgress
+            : FormzSubmissionStatus.failure,
       ),
     );
   }
@@ -57,16 +60,19 @@ class CreateWorkoutBloc extends Bloc<CreateWorkoutEvent, CreateWorkoutState> {
     Emitter<CreateWorkoutState> emit,
   ) {
     final description = WorkoutDescription.dirty(event.description);
+    final isValid = Formz.validate(
+      [
+        state.name,
+        description,
+        state.partsInput,
+      ],
+    );
     emit(
       state.copyWith(
         description: description,
-        status: Formz.validate(
-          [
-            state.name,
-            description,
-            state.partsInput,
-          ],
-        ),
+        status: isValid
+            ? FormzSubmissionStatus.inProgress
+            : FormzSubmissionStatus.failure,
       ),
     );
   }
@@ -89,17 +95,20 @@ class CreateWorkoutBloc extends Bloc<CreateWorkoutEvent, CreateWorkoutState> {
     var parts = state.wod.parts.toList();
     parts.add(event.part);
     final partsInput = WorkoutPartsInput.dirty(parts);
+    final isValid = Formz.validate(
+      [
+        state.name,
+        state.description,
+        partsInput,
+      ],
+    );
     emit(
       state.copyWith(
         partsInput: partsInput,
         wod: state.wod.copyWith(parts: partsInput.value),
-        status: Formz.validate(
-          [
-            state.name,
-            state.description,
-            partsInput,
-          ],
-        ),
+        status: isValid
+            ? FormzSubmissionStatus.success
+            : FormzSubmissionStatus.failure,
       ),
     );
   }
@@ -108,13 +117,13 @@ class CreateWorkoutBloc extends Bloc<CreateWorkoutEvent, CreateWorkoutState> {
     CreateWorkoutConfirmed event,
     Emitter<CreateWorkoutState> emit,
   ) async {
-    emit(state.copyWith(status: FormzStatus.submissionInProgress));
+    emit(state.copyWith(status: FormzSubmissionStatus.inProgress));
     try {
       await _wodGeneratorRepository.createWorkout(wod: state.wod);
-      emit(state.copyWith(status: FormzStatus.submissionSuccess));
+      emit(state.copyWith(status: FormzSubmissionStatus.success));
     } catch (e) {
       addError(e, StackTrace.current);
-      emit(state.copyWith(status: FormzStatus.submissionFailure));
+      emit(state.copyWith(status: FormzSubmissionStatus.failure));
     }
   }
 

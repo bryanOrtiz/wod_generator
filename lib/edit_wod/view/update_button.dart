@@ -6,24 +6,23 @@ class _UpdateButton extends StatelessWidget {
     return BlocBuilder<EditWodBloc, EditWodState>(
       builder: (context, state) {
         final ButtonStyle style = TextButton.styleFrom(
-            primary: Theme.of(context).colorScheme.onPrimary);
+            foregroundColor: Theme.of(context).colorScheme.onPrimary);
         return TextButton(
           style: style,
           onPressed: () {
             final bloc = context.read<EditWodBloc>();
-            if (state.isEditable &&
-                !state.updateStatus.isSubmissionInProgress) {
+            if (state.isEditable && !state.updateStatus.isInProgress) {
               bloc.add(const EditWodOnUpdate());
             }
             bloc.add(!state.isEditable
                 ? const EditWodEditToggled()
                 : const EditWodUpdateToggled());
           },
-          child: (state.updateStatus.isSubmissionInProgress)
+          child: (state.updateStatus.isInProgress)
               ? SizedBox.square(
+                  dimension: 24,
                   child: CircularProgressIndicator(
                       color: Theme.of(context).colorScheme.onPrimary),
-                  dimension: 24,
                 )
               : Text(!state.isEditable ? 'Edit' : 'Update'),
         );

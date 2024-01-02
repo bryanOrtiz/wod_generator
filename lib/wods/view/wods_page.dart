@@ -87,12 +87,12 @@ class _EmptyWods extends StatelessWidget {
         children: [
           Text(
             'Let\'s Get Started',
-            style: Theme.of(context).textTheme.headline4,
+            style: Theme.of(context).textTheme.headlineMedium,
             textAlign: TextAlign.center,
           ),
           Text(
             'To get started we will need to generate your first Workout of the Day (WOD). Please click on the button below.',
-            style: Theme.of(context).textTheme.bodyText1,
+            style: Theme.of(context).textTheme.bodyLarge,
             textAlign: TextAlign.center,
           ),
           _BuildWodButton(),

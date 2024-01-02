@@ -54,20 +54,20 @@ class EditWodBloc extends Bloc<EditWodEvent, EditWodState> {
     try {
       emit(
         state.copyWith(
-          deleteStatus: FormzStatus.submissionInProgress,
+          deleteStatus: FormzSubmissionStatus.inProgress,
         ),
       );
       await _wodGeneratorRepository.deleteWod(state.wod);
       emit(
         state.copyWith(
-          deleteStatus: FormzStatus.submissionSuccess,
+          deleteStatus: FormzSubmissionStatus.success,
         ),
       );
     } catch (e) {
       // TODO: error handling
       emit(
         state.copyWith(
-          deleteStatus: FormzStatus.submissionFailure,
+          deleteStatus: FormzSubmissionStatus.failure,
         ),
       );
       addError(e, StackTrace.current);
@@ -81,20 +81,20 @@ class EditWodBloc extends Bloc<EditWodEvent, EditWodState> {
     try {
       emit(
         state.copyWith(
-          updateStatus: FormzStatus.submissionInProgress,
+          updateStatus: FormzSubmissionStatus.inProgress,
         ),
       );
       await _wodGeneratorRepository.updateWorkout(wod: state.wod);
       emit(
         state.copyWith(
-          updateStatus: FormzStatus.submissionSuccess,
+          updateStatus: FormzSubmissionStatus.success,
         ),
       );
     } catch (e) {
       // TODO: error handling
       emit(
         state.copyWith(
-          updateStatus: FormzStatus.submissionFailure,
+          updateStatus: FormzSubmissionStatus.failure,
         ),
       );
       addError(e, StackTrace.current);

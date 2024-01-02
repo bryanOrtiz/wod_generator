@@ -16,13 +16,13 @@ class FindExerciseList extends StatelessWidget {
               return ListTile(
                 title: Text(
                   'Selected Exercise:',
-                  style: Theme.of(context).textTheme.caption,
+                  style: Theme.of(context).textTheme.bodySmall,
                 ),
                 subtitle: Text(
                   state.part.exercise != null
                       ? state.part.exercise!.name
                       : 'Click here to find exercise',
-                  style: Theme.of(context).textTheme.bodyText1,
+                  style: Theme.of(context).textTheme.bodyLarge,
                 ),
                 trailing: const Icon(Icons.unfold_more),
               );

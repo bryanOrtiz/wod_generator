@@ -6,8 +6,8 @@ class EditWodState extends Equatable {
     this.isEditable = false,
     this.name = const WorkoutName.pure(),
     this.description = const WorkoutDescription.pure(),
-    this.deleteStatus = FormzStatus.pure,
-    this.updateStatus = FormzStatus.pure,
+    this.deleteStatus = FormzSubmissionStatus.initial,
+    this.updateStatus = FormzSubmissionStatus.initial,
   });
 
   final Wod wod;
@@ -15,16 +15,16 @@ class EditWodState extends Equatable {
   final WorkoutName name;
   final WorkoutDescription description;
 
-  final FormzStatus deleteStatus;
-  final FormzStatus updateStatus;
+  final FormzSubmissionStatus deleteStatus;
+  final FormzSubmissionStatus updateStatus;
 
   EditWodState copyWith({
     Wod? wod,
     WorkoutName? name,
     WorkoutDescription? description,
     bool? isEditable,
-    FormzStatus? deleteStatus,
-    FormzStatus? updateStatus,
+    FormzSubmissionStatus? deleteStatus,
+    FormzSubmissionStatus? updateStatus,
   }) {
     return EditWodState(
       wod: wod ?? this.wod,

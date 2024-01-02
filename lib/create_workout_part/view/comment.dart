@@ -14,13 +14,13 @@ class Comment extends StatelessWidget {
             return ListTile(
               title: Text(
                 'Comment',
-                style: Theme.of(context).textTheme.caption,
+                style: Theme.of(context).textTheme.bodySmall,
               ),
               subtitle: Text(
                 state.part.comment.isNotEmpty
                     ? state.part.comment
                     : 'Leave a comment explaining exercise and how sets should be done.',
-                style: Theme.of(context).textTheme.bodyText1,
+                style: Theme.of(context).textTheme.bodyLarge,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),

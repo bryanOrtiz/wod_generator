@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:formz/formz.dart';
 import 'package:wod_generator/create_workout/bloc/create_workout_bloc.dart';
 import 'package:wod_generator_repository/wod_generator_repository.dart';
-import 'package:formz/formz.dart';
 
 class ConfirmCreateWorkoutSheet extends StatelessWidget {
   const ConfirmCreateWorkoutSheet({Key? key, required this.bloc})
@@ -16,7 +16,7 @@ class ConfirmCreateWorkoutSheet extends StatelessWidget {
       child: SafeArea(
         child: BlocListener<CreateWorkoutBloc, CreateWorkoutState>(
           listener: (context, state) {
-            if (state.status.isSubmissionSuccess) {
+            if (state.status.isSuccess) {
               Navigator.of(context).popUntil((route) => route.isFirst);
             }
             // TODO: implement listener for errors
@@ -53,7 +53,7 @@ class _WorkoutListView extends StatelessWidget {
                     padding: const EdgeInsets.only(bottom: 16.0),
                     child: Text(
                       'Are you sure you want to create the following workout?',
-                      style: Theme.of(context).textTheme.headline6,
+                      style: Theme.of(context).textTheme.titleLarge,
                       textAlign: TextAlign.center,
                     ),
                   );
@@ -61,22 +61,22 @@ class _WorkoutListView extends StatelessWidget {
                   return ListTile(
                     title: Text(
                       'Name',
-                      style: theme.textTheme.subtitle1,
+                      style: theme.textTheme.titleMedium,
                     ),
                     subtitle: Text(
                       state.wod.name,
-                      style: theme.textTheme.bodyText1,
+                      style: theme.textTheme.bodyLarge,
                     ),
                   );
                 case 2:
                   return ListTile(
                     title: Text(
                       'Description',
-                      style: theme.textTheme.subtitle1,
+                      style: theme.textTheme.titleMedium,
                     ),
                     subtitle: Text(
                       state.wod.description,
-                      style: theme.textTheme.bodyText1,
+                      style: theme.textTheme.bodyLarge,
                     ),
                   );
                 case 3:
@@ -99,7 +99,7 @@ class _WorkoutPartListView extends StatelessWidget {
     return ListTile(
       title: Text(
         'Parts',
-        style: theme.textTheme.subtitle1,
+        style: theme.textTheme.titleMedium,
       ),
       subtitle: BlocBuilder<CreateWorkoutBloc, CreateWorkoutState>(
         builder: (context, state) {
@@ -113,11 +113,11 @@ class _WorkoutPartListView extends StatelessWidget {
                     ListTile(
                       title: Text(
                         workoutPart.exercise!.name,
-                        style: theme.textTheme.subtitle2,
+                        style: theme.textTheme.titleSmall,
                       ),
                       subtitle: Text(
                         workoutPart.description(),
-                        style: theme.textTheme.bodyText2,
+                        style: theme.textTheme.bodyMedium,
                       ),
                     ),
                     const Divider(),
@@ -141,12 +141,12 @@ class _SubmitButton extends StatelessWidget {
           onPressed: () => context
               .read<CreateWorkoutBloc>()
               .add(const CreateWorkoutConfirmed()),
-          child: (state.status.isSubmissionInProgress)
+          child: (state.status.isInProgress)
               ? SizedBox.square(
+                  dimension: 24,
                   child: CircularProgressIndicator(
                     color: Theme.of(context).colorScheme.onPrimary,
                   ),
-                  dimension: 24,
                 )
               : const Text('Submit'),
         );

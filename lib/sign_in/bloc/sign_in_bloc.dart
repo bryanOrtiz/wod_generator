@@ -1,4 +1,6 @@
 import 'package:equatable/equatable.dart';
+import 'package:firebase_auth_api/firebase_auth_api.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
 import 'package:wod_generator/sign_in/models/models.dart';
@@ -37,17 +39,17 @@ class SignInState extends Equatable {
   const SignInState({
     this.email = const Email.pure(),
     this.password = const Password.pure(),
-    this.status = FormzStatus.pure,
+    this.status = FormzSubmissionStatus.initial,
   });
 
   final Email email;
   final Password password;
-  final FormzStatus status;
+  final FormzSubmissionStatus status;
 
   SignInState copyWith({
     Email? email,
     Password? password,
-    FormzStatus? status,
+    FormzSubmissionStatus? status,
   }) {
     return SignInState(
       email: email ?? this.email,
@@ -61,8 +63,11 @@ class SignInState extends Equatable {
 }
 
 class SignInBloc extends Bloc<SignInEvent, SignInState> {
-  SignInBloc({required WodGeneratorRepository wodGeneratorRepository})
-      : _wodGeneratorRepository = wodGeneratorRepository,
+  SignInBloc({
+    required WodGeneratorRepository wodGeneratorRepository,
+    required FirebaseAuthApi firebaseAuthApi,
+  })  : _wodGeneratorRepository = wodGeneratorRepository,
+        _firebaseAuthApi = firebaseAuthApi,
         super(const SignInState()) {
     on<SignInEmailChanged>(_onUsernameChanged);
     on<SignInPasswordChanged>(_onPasswordChanged);
@@ -70,18 +75,22 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
   }
 
   final WodGeneratorRepository _wodGeneratorRepository;
+  final FirebaseAuthApi _firebaseAuthApi;
 
   void _onUsernameChanged(
     SignInEmailChanged event,
     Emitter<SignInState> emit,
   ) {
     final email = Email.dirty(event.email);
+    final isValid = Formz.validate(
+      [state.password, email],
+    );
     emit(
       state.copyWith(
         email: email,
-        status: Formz.validate(
-          [state.password, email],
-        ),
+        // status: isValid
+        //     ? FormzSubmissionStatus.initial
+        //     : FormzSubmissionStatus.failure,
       ),
     );
   }
@@ -91,12 +100,15 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
     Emitter<SignInState> emit,
   ) {
     final password = Password.dirty(event.password);
+    final isValid = Formz.validate(
+      [state.email, password],
+    );
     emit(
       state.copyWith(
         password: password,
-        status: Formz.validate(
-          [state.email, password],
-        ),
+        // status: isValid
+        //     ? FormzSubmissionStatus.initial
+        //     : FormzSubmissionStatus.failure,
       ),
     );
   }
@@ -105,16 +117,16 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
     SignInSubmitted event,
     Emitter<SignInState> emit,
   ) async {
-    if (state.status.isValidated) {
-      emit(state.copyWith(status: FormzStatus.submissionInProgress));
+    if (state.email.isValid && state.password.isValid) {
+      emit(state.copyWith(status: FormzSubmissionStatus.inProgress));
       try {
-        await _wodGeneratorRepository.login(
+        await _firebaseAuthApi.logInWithEmailAndPassword(
           email: state.email.value,
           password: state.password.value,
         );
-        emit(state.copyWith(status: FormzStatus.submissionSuccess));
+        emit(state.copyWith(status: FormzSubmissionStatus.success));
       } catch (e) {
-        emit(state.copyWith(status: FormzStatus.submissionFailure));
+        emit(state.copyWith(status: FormzSubmissionStatus.failure));
       }
     }
   }

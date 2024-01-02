@@ -13,7 +13,7 @@ class CreateWorkoutState extends Equatable {
       creationDate: '',
       parts: [],
     ),
-    this.status = FormzStatus.pure,
+    this.status = FormzSubmissionStatus.initial,
   });
 
   final int step;
@@ -21,7 +21,7 @@ class CreateWorkoutState extends Equatable {
   final WorkoutDescription description;
   final WorkoutPartsInput partsInput;
   final Wod wod;
-  final FormzStatus status;
+  final FormzSubmissionStatus status;
 
   CreateWorkoutState copyWith({
     int? step,
@@ -29,7 +29,7 @@ class CreateWorkoutState extends Equatable {
     WorkoutDescription? description,
     WorkoutPartsInput? partsInput,
     Wod? wod,
-    FormzStatus? status,
+    FormzSubmissionStatus? status,
   }) {
     return CreateWorkoutState(
       step: step ?? this.step,

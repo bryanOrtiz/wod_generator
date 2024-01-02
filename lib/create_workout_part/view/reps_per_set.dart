@@ -17,11 +17,11 @@ class RepsPerSet extends StatelessWidget {
             return ListTile(
               title: Text(
                 'Reps',
-                style: Theme.of(context).textTheme.caption,
+                style: Theme.of(context).textTheme.bodySmall,
               ),
               subtitle: Text(
                 state.part.description(),
-                style: Theme.of(context).textTheme.bodyText1,
+                style: Theme.of(context).textTheme.bodyLarge,
               ),
               trailing: const Icon(Icons.unfold_more),
             );
@@ -57,7 +57,7 @@ class _BottomSheet extends StatelessWidget {
               padding: const EdgeInsets.all(16),
               child: Text(
                 'For each set please mark the number of reps for the sets.',
-                style: Theme.of(context).textTheme.headline6,
+                style: Theme.of(context).textTheme.titleLarge,
                 textAlign: TextAlign.center,
               ),
             ),

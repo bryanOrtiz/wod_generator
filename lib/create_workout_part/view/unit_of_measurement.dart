@@ -16,8 +16,8 @@ class UnitOfMeasurement extends StatelessWidget {
           value: state.selectedWeightUnit.name,
           items: state.weightUnits
               .map((unit) => DropdownMenuItem<String>(
-                    child: Text(unit.name),
                     value: unit.name,
+                    child: Text(unit.name),
                   ))
               .toList(),
           onChanged: (selectedWeightUnit) {

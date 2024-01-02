@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:formz/formz.dart';
 import 'package:wod_generator_repository/wod_generator_repository.dart';
 import 'package:wod_generator/edit_wod/bloc/edit_wod_bloc.dart';
-import 'package:formz/formz.dart';
 
 part 'name_text_field.dart';
 part 'description_text_field.dart';
@@ -43,7 +43,7 @@ class EditWodPage extends StatelessWidget {
         body: SafeArea(
           child: BlocListener<EditWodBloc, EditWodState>(
             listener: (context, state) {
-              if (state.deleteStatus.isSubmissionSuccess) {
+              if (state.deleteStatus.isSuccess) {
                 Navigator.of(context).pop();
               }
             },

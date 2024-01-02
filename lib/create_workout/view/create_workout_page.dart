@@ -70,7 +70,7 @@ class CreateWorkoutPage extends StatelessWidget {
                     onPressed: () {
                       final createWorkoutBlocProvider =
                           BlocProvider.of<CreateWorkoutBloc>(context);
-                      if (!state.status.isValid) {
+                      if (state.status.isFailure) {
                         showDialog(
                           context: context,
                           builder: (context) => CreateWorkoutError(

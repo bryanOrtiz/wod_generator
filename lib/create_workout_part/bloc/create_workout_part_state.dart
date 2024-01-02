@@ -6,6 +6,7 @@ class CreateWorkoutPartState extends Equatable {
     this.searchTerm = const SearchTerm.pure(),
     this.exercises = const [],
     this.selectedExercise,
+    this.numberOfSetsText = const NumberOfSets.pure(),
     this.sets = const [WorkoutSet(reps: 1)],
     this.weightUnits = const [],
     this.selectedWeightUnit = const WeightUnit(id: 1, name: 'lb'),
@@ -17,6 +18,7 @@ class CreateWorkoutPartState extends Equatable {
   final SearchTerm searchTerm;
   final List<SearchExercise> exercises;
   final SearchExercise? selectedExercise;
+  final NumberOfSets numberOfSetsText;
   final List<WorkoutSet> sets;
   final List<WeightUnit> weightUnits;
   final WeightUnit selectedWeightUnit;

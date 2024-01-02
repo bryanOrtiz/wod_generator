@@ -11,15 +11,15 @@ class _DeleteButton extends StatelessWidget {
               foregroundColor:
                   MaterialStateProperty.all<Color>(theme.colorScheme.error)),
           onPressed: () {
-            if (!state.deleteStatus.isSubmissionInProgress) {
+            if (!state.deleteStatus.isInProgress) {
               context.read<EditWodBloc>().add(const EditWodDelete());
             }
           },
-          child: (state.deleteStatus.isSubmissionInProgress)
+          child: (state.deleteStatus.isInProgress)
               ? SizedBox.square(
+                  dimension: 24,
                   child: CircularProgressIndicator(
                       color: Theme.of(context).colorScheme.error),
-                  dimension: 24,
                 )
               : const Text('Delete'),
         );
