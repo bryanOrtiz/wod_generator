@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
-import 'package:wod_generator/sign_in/bloc/sign_in_bloc.dart';
-import 'package:wod_generator/sign_up/view/sign_up_page.dart';
+import 'package:wod_generator/sign_in/view/sign_in_page.dart';
+import 'package:wod_generator/sign_up/sign_up_bloc.dart';
 
-class SignIn extends StatelessWidget {
-  const SignIn({Key? key}) : super(key: key);
+class SignUp extends StatelessWidget {
+  const SignUp({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) => BlocListener<SignInBloc, SignInState>(
+  Widget build(BuildContext context) => BlocListener<SignUpBloc, SignUpState>(
         listener: (context, state) {
           if (state.status.isFailure) {
             ScaffoldMessenger.of(context)
@@ -31,8 +31,8 @@ class SignIn extends StatelessWidget {
                 const Spacer(
                   flex: 2,
                 ),
-                _SignInButton(),
                 _SignUpButton(),
+                _SignInButton(),
                 const Spacer()
               ],
             ),
@@ -44,7 +44,7 @@ class SignIn extends StatelessWidget {
 class _EmailInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<SignInBloc, SignInState>(
+    return BlocBuilder<SignUpBloc, SignUpState>(
       buildWhen: (previous, current) => previous.email != current.email,
       builder: (context, state) {
         return TextFormField(
@@ -54,8 +54,11 @@ class _EmailInput extends StatelessWidget {
               ),
               labelText: 'Email',
               errorText: state.email.isNotValid ? 'invalid email' : null),
-          onChanged: (username) =>
-              context.read<SignInBloc>().add(SignInEmailChanged(username)),
+          onChanged: (emailTxt) => context.read<SignUpBloc>().add(
+                SignUpEmailUpdated(
+                  emailTxt: emailTxt,
+                ),
+              ),
         );
       },
     );
@@ -65,7 +68,7 @@ class _EmailInput extends StatelessWidget {
 class _PasswordInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<SignInBloc, SignInState>(
+    return BlocBuilder<SignUpBloc, SignUpState>(
       buildWhen: (previous, current) => previous.password != current.password,
       builder: (context, state) {
         return TextFormField(
@@ -75,27 +78,12 @@ class _PasswordInput extends StatelessWidget {
               ),
               labelText: 'Password',
               errorText: state.email.isNotValid ? 'invalid email' : null),
-          onChanged: (password) =>
-              context.read<SignInBloc>().add(SignInPasswordChanged(password)),
+          onChanged: (passwordTxt) => context.read<SignUpBloc>().add(
+                SignUpPasswordUpdated(
+                  passwordTxt: passwordTxt,
+                ),
+              ),
         );
-      },
-    );
-  }
-}
-
-class _SignInButton extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<SignInBloc, SignInState>(
-      buildWhen: (previous, current) => previous.status != current.status,
-      builder: (context, state) {
-        return state.status.isInProgress
-            ? const CircularProgressIndicator()
-            : ElevatedButton(
-                onPressed: () =>
-                    context.read<SignInBloc>().add(const SignInSubmitted()),
-                child: const Text('Sign In'),
-              );
       },
     );
   }
@@ -104,12 +92,30 @@ class _SignInButton extends StatelessWidget {
 class _SignUpButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    return BlocBuilder<SignUpBloc, SignUpState>(
+      buildWhen: (previous, current) => previous.status != current.status,
+      builder: (context, state) {
+        return state.status.isInProgress
+            ? const CircularProgressIndicator()
+            : ElevatedButton(
+                onPressed: () =>
+                    context.read<SignUpBloc>().add(const SignUpSubmitted()),
+                child: const Text('Sign Up'),
+              );
+      },
+    );
+  }
+}
+
+class _SignInButton extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
     return TextButton(
       onPressed: () => Navigator.push(
         context,
-        SignUpPage.route(),
+        SignInPage.route(),
       ),
-      child: const Text('Sign Up'),
+      child: const Text('Sign In'),
     );
   }
 }
